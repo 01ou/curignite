@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import NotFound from './pages/error/NotFound';
 import CreateUserTest from './components/test/CreateUserTest';
-import AuthRoot from './pages/authentication/AuthRoot';
+import AuthRoot from './pages/auth/AuthRoot';
 import HomeRoot from './pages/home/HomeRoot';
 
 const App: React.FC = () => {
