@@ -1,0 +1,47 @@
+import React, { useState } from 'react';
+import CreateAccountView, { CreateAccountFormState } from './CreateAccountView';
+import { useNavigate } from 'react-router-dom';
+import { signUpWithEmail } from '../../../../firebase/auth/signUp';
+import useFormState from '../../../../hooks/form/useFormState';
+import { authPaths } from '../../authPaths';
+
+const CreateAccount: React.FC = () => {
+  const navigate = useNavigate();
+
+  const { formState, onChangeFormState } = useFormState<CreateAccountFormState>({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState('');
+  const [submitDisabled, setSubmitDisabled] = useState(false);
+
+  const handleEmailSignUp = async () => {
+    const username = formState.username;
+    const email = formState.email;
+    const password = formState.password;
+
+    setSubmitDisabled(true);
+    const result = await signUpWithEmail(email, password);
+    setSubmitDisabled(false);
+ 
+    if (!result.isSuccessful) {
+      setError(result.errorMessage);
+    } else {
+      localStorage.setDataAllAtOnce({username, email, password});
+      navigate(authPaths.accountEndpoint);
+    }
+  };
+
+  return (
+    <CreateAccountView 
+      formState={formState}
+      error={error}
+      submitDisabled={submitDisabled}
+      onChangeFormState={onChangeFormState}
+      onEmailSignUp={handleEmailSignUp}
+    />
+  );
+};
+
+export default CreateAccount;

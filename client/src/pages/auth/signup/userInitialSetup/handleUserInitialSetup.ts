@@ -1,0 +1,33 @@
+import { Timestamp } from "firebase/firestore";
+import serviceFactory from "../../../../firebase/firestore/factory";
+import { ConvertTimestampToNumber } from "../../../../types/firebase/firestore/formatTypes";
+import { UserRead } from "../../../../types/firebase/firestore/structure/users/userStructure";
+import { InitialSetupFormState } from "./InitialSetupView";
+
+export const getUniqueName = async (
+  userData?: ConvertTimestampToNumber<UserRead> | null
+) => {
+  const name = userData?.displayName || localStorage.getData('username') || "";
+  // const uniqueName = await getUniqueUserName(name);
+  return name;
+}
+
+export const handleCreateUser = async (uid: string, formState: InitialSetupFormState) => {
+  const { username, birthday, iconFile } = formState;
+
+  // ユーザー名と誕生日のチェック
+  if (!username || !birthday || !iconFile) {
+    console.error('ユーザー名または誕生日またはアイコンが正しく設定されていません。');
+    throw new Error('ユーザー名または誕生日またはアイコンが正しく設定されていません。');
+  }
+
+  const userService = serviceFactory.createUserService();
+  
+  try {
+    // ユーザーの作成処理
+    await userService.create({ createdById: uid, displayName: formState.username, email: "", photoURL: null, settings: {language: "ja"} });
+  } catch (error) {
+    console.error('ユーザー作成中にエラーが発生しました:', error);
+    throw new Error('ユーザーの作成に失敗しました。');
+  }
+};
