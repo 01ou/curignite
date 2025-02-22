@@ -21,7 +21,7 @@ const checkUserNameExist = async (username: string) => {
   return { username, isExist: true };
 };
 
-const checkUidExist = async (uid: string) => {
+const checkUidExist = async (_: string) => {
   // TODO: データベース連携などの実装
   return true;
 };

@@ -11,11 +11,11 @@ interface UserSettings {
   language: "ja" | "en" | "other"; // 言語設定
 }
 
-interface UserStats {
-  totalStudyTime: number; // 総学習時間 (ミリ秒)
-  completedProblems: number; // 完了した問題数
-  recentAccess: Record<string, number>; // 日ごとの学習時間 { "YYYY-MM-DD": timeSpent }
-}
+// interface UserStats {
+//   totalStudyTime: number; // 総学習時間 (ミリ秒)
+//   completedProblems: number; // 完了した問題数
+//   recentAccess: Record<string, number>; // 日ごとの学習時間 { "YYYY-MM-DD": timeSpent }
+// }
 
 
 export type UserRead = BaseDocumentRead & UserData;
