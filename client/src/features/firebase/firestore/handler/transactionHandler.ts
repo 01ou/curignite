@@ -7,9 +7,9 @@ import {
   runTransaction, 
   Transaction 
 } from "firebase/firestore";
-import { BaseDocumentRead, BaseDocumentWrite } from "../../../../types/firebase/firestore/baseTypes";
+import { BaseDocumentRead, BaseDocument } from "../../../../types/firebase/firestore/baseTypes";
 
-class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocumentWrite> {
+class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocument> {
   // コレクションごとにアクティブなトランザクションを管理するマップ
   private transactions: Map<string, Transaction> = new Map();
 
@@ -80,7 +80,7 @@ class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocume
    * @param data 作成するデータ
    */
   set(
-    collectionRef: CollectionReference<Write>,
+    collectionRef: CollectionReference,
     documentId: string,
     data: Write
   ): void {
@@ -97,7 +97,7 @@ class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocume
    * @param data 更新するデータ（部分更新）
    */
   update(
-    collectionRef: CollectionReference<Write>,
+    collectionRef: CollectionReference,
     documentId: string,
     data: Partial<Write>
   ): void {
@@ -113,7 +113,7 @@ class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocume
    * @param documentId 削除するドキュメントのID
    */
   delete(
-    collectionRef: CollectionReference<Write>,
+    collectionRef: CollectionReference,
     documentId: string
   ): void {
     const transaction = this.getActiveTransaction(collectionRef);

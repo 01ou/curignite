@@ -1,9 +1,7 @@
 import { DocumentData, FieldValue } from "firebase/firestore";
 
 // すべての動的Firestoreドキュメントに存在するべきフィールド
-export interface BaseDocumentWrite extends DocumentData {
-    createdById: string; // 作成者のUserId
-}
+export type BaseDocumentWrite = DocumentData;
 
 export interface BaseDocumentRead {
     path: string;
@@ -15,6 +13,8 @@ export interface BaseDocumentRead {
     deletedAt?: number // 削除日時
     isActive: boolean; // 論理的削除の状態
 }
+
+export type BaseDocument = DocumentData;
 
 export interface SoftDeleteAdditionalField {
     isActive: false;

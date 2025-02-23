@@ -8,9 +8,9 @@ import {
   writeBatch, 
   WriteBatch 
 } from "firebase/firestore";
-import { BaseDocumentWrite } from "../../../../types/firebase/firestore/baseTypes";
+import { BaseDocument } from "../../../../types/firebase/firestore/baseTypes";
 
-class BatchHandler<Write extends BaseDocumentWrite> {
+class BatchHandler<Write extends BaseDocument> {
   // コレクションごとにアクティブなバッチ操作を管理するマップ（キーは collectionRef.path）
   private batches: Map<string, WriteBatch> = new Map();
 
@@ -88,7 +88,7 @@ class BatchHandler<Write extends BaseDocumentWrite> {
    * @param documentId 作成するドキュメントのID
    * @param data 作成するデータ
    */
-  set(collectionRef: CollectionReference<Write>, documentId: string, data: Write): void {
+  set(collectionRef: CollectionReference, documentId: string, data: Write): void {
     const batch = this.getActiveBatch(collectionRef);
     const docRef = doc(collectionRef, documentId);
     batch.set(docRef, this.writePreprocessing(data));
@@ -100,7 +100,7 @@ class BatchHandler<Write extends BaseDocumentWrite> {
    * @param documentId 更新するドキュメントのID
    * @param data 更新する部分データ
    */
-  update(collectionRef: CollectionReference<Write>, documentId: string, data: Partial<Write>): void {
+  update(collectionRef: CollectionReference, documentId: string, data: Partial<Write>): void {
     const batch = this.getActiveBatch(collectionRef);
     const docRef = doc(collectionRef, documentId);
     batch.update(docRef, data as Write);
@@ -111,7 +111,7 @@ class BatchHandler<Write extends BaseDocumentWrite> {
    * @param collectionRef 対象のコレクションRef
    * @param documentId 削除するドキュメントのID
    */
-  delete(collectionRef: CollectionReference<Write>, documentId: string): void {
+  delete(collectionRef: CollectionReference, documentId: string): void {
     const batch = this.getActiveBatch(collectionRef);
     const docRef = doc(collectionRef, documentId);
     batch.delete(docRef);

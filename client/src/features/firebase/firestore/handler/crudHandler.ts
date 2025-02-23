@@ -3,7 +3,7 @@ import {
   addDoc, deleteDoc, doc, getDoc, getDocs, updateDoc, setDoc, query, where, limit, 
   startAfter, orderBy, serverTimestamp, FieldValue, QueryConstraint 
 } from "firebase/firestore";
-import { BaseDocumentRead, BaseDocumentWrite, SoftDeleteAdditionalField } from "../../../../types/firebase/firestore/baseTypes";
+import { BaseDocumentRead, BaseDocument, SoftDeleteAdditionalField } from "../../../../types/firebase/firestore/baseTypes";
 import { parseDocumentSnapshot, parseQuerySnapshot } from "../snapshotUtils";
 
 export class CRUDHandler {
@@ -47,7 +47,7 @@ export class CRUDHandler {
    * @param data 作成するドキュメントのデータ
    * @returns 作成されたドキュメントの参照
    */
-  public static async create<Write extends BaseDocumentWrite>(
+  public static async create<Write extends BaseDocument>(
     collectionRef: CollectionReference, 
     data: Write
   ): Promise<DocumentReference<Write>> {
@@ -66,7 +66,7 @@ export class CRUDHandler {
    * @param data 作成するドキュメントのデータ
    * @param merge 既存ドキュメントへのマージフラグ（デフォルト false）
    */
-  public static async createWithId<Write extends BaseDocumentWrite>(
+  public static async createWithId<Write extends BaseDocument>(
     collectionRef: CollectionReference,
     documentId: string, 
     data: Write, 
@@ -116,10 +116,10 @@ export class CRUDHandler {
    * @param documentId 更新するドキュメントのID
    * @param data 更新する部分的なデータ
    */
-  public static async update<Write extends BaseDocumentWrite>(
+  public static async update<Write extends BaseDocument>(
     collectionRef: CollectionReference,
     documentId: string,
-    data: Partial<Write & SoftDeleteAdditionalField>
+    data: Partial<Write>
   ): Promise<void> {
     const docRef = doc(collectionRef, documentId);
     await this.handleFirestoreOperation(
@@ -152,7 +152,7 @@ export class CRUDHandler {
    * @param documentId 削除するドキュメントのID
    * @param updateFields オプションで追加の更新フィールドを指定
    */
-  public static async softDelete<Write extends BaseDocumentWrite>(
+  public static async softDelete<Write extends BaseDocument>(
     collectionRef: CollectionReference,
     documentId: string,
     updateFields?: Partial<Write>

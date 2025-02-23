@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 interface HomeBottomNavigationProps {
-  // 任意で、選択されているアイコンやコールバック関数を渡せるようにすることもできます
+  // 任意で、選択されているアイコンやコールバック関数を渡せるようにすることもできます 
   selectedIndex?: number;
   onChange?: (event: React.SyntheticEvent, newValue: number) => void;
 }

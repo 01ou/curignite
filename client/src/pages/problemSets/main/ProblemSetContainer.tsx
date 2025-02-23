@@ -1,5 +1,5 @@
 import React from 'react';
-import OverlayIconButton from '../../components/inputs/OverlayIconButton';
+import OverlayIconButton from '../../../components/inputs/OverlayIconButton';
 import { Stack, Typography } from '@mui/material';
 import IntimacyStar from './IntimacyStar';
 

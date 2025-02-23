@@ -1,6 +1,7 @@
 import { Firestore } from 'firebase/firestore';
 import { db } from '../firebase';
-import { UserService } from './servieces/users/userService';
+import { UserService } from './services/users/userService';
+import { UserProblemSetService } from './services/users/problemSets/userProblemSetsService';
 
 type ConstructorWithArgs<T, Args extends any[]> = new (...args: Args) => T;
 
@@ -26,6 +27,9 @@ export class ServiceFactory {
     return this.getInstance("user", UserService, this.firestore);
   }
 
+  createUserProblemSetService() {
+    return this.getInstance("user/problemSet", UserProblemSetService, this.firestore);
+  }
 }
 
 const serviceFactory = new ServiceFactory(db);

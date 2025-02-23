@@ -7,9 +7,9 @@ import { MenuBook, Task } from "@mui/icons-material";
 import FloatingButton from "../../../components/inputs/FloatingButton";
 import { getTextOutline } from "../../../functions/style/sxUtils";
 import CharacterDisplay from "../../auth/main/CharacterDisplay";
-import ItemCountDisplay from "../ItemCountDisplay";
-import StartButton from "../StartButton";
-import HomeBottomNavigation from "./bottomNavigation/HomeBottomNavigation";
+import ItemCountDisplay from "./ItemCountDisplay";
+import StartButton from "./StartButton";
+import HomeBottomNavigation from "../navigation/HomeBottomNavigation";
 import itemImage from "../../../assets/item.png";
 
 const HomeMain: React.FC = () => {

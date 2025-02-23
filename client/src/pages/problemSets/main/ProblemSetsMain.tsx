@@ -2,7 +2,7 @@ import React from 'react';
 import BackgroundContainer from '../../../components/display/BackgroundContainer';
 import background from '../../../assets/space.png';
 import japaneseIcon from "../../../assets/subjects/japanese.png";
-import ProblemSetContainer from '../ProblemSetContainer';
+import ProblemSetContainer from './ProblemSetContainer';
 
 interface ProblemSetsMainProps { }
 

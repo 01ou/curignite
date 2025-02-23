@@ -1,8 +1,8 @@
 // CRUDHandlerクラスのメソッドインターフェース
 import { DocumentReference, DocumentSnapshot, QueryConstraint, QuerySnapshot, Transaction } from "firebase/firestore";
-import { BaseDocumentRead, BaseDocumentWrite } from "../../../../types/firebase/firestore/baseTypes";
+import { BaseDocument, BaseDocumentRead, BaseDocumentWrite } from "../../../../types/firebase/firestore/baseTypes";
 
-export interface CRUDHandlerInterface<Read extends BaseDocumentRead, Write extends BaseDocumentWrite> {
+export interface CRUDHandlerInterface<Read extends BaseDocumentRead, Write extends BaseDocument> {
   // ドキュメント作成
   create(data: Write): Promise<DocumentReference<Write>>;
   createWithId(documentId: string, data: Write, merge?: boolean): Promise<void>;
