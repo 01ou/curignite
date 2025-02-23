@@ -2,8 +2,8 @@ import React from 'react';
 import useFormState from '../../features/hooks/form/useFormState';
 import { UserWrite } from '../../types/firebase/firestore/structure/users/userStructure';
 import useAsyncHandler from '../../features/hooks/form/useAsyncHandler';
-import serviceFactory from '../../firebase/firestore/factory';
 import { DocumentData, DocumentReference } from 'firebase/firestore';
+import serviceFactory from '../../features/firebase/firestore/factory';
 
 interface CreateUserTestProps { }
 

@@ -2,11 +2,11 @@ import { useEffect, useMemo, useCallback } from 'react';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, UserCredential } from 'firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import useMultipleAsyncHandler from '../form/useMultipleAsyncHandler';
-import { googleProvider } from '../../../firebase/firebase';
 import useDialogues from '../dialogue/useDialogue';
 import { authNodeContents } from '../../../constants/dialogue/auth/authNodeContents';
 import { useTranslation } from 'react-i18next';
 import { DialogueElement } from '../../../types/dialogue/DialogueTypes';
+import { googleProvider } from '../../firebase/firebase';
 
 type AsyncStates = {
   googleAuth: UserCredential;

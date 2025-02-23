@@ -1,6 +1,6 @@
 import { Firestore } from "firebase/firestore";
-import { UserRead, UserWrite } from "../../../../types/firebase/firestore/structure/users/userStructure";
-import FirestoreService from "../../../../functions/firebase/firestore/handler/firestoreService";
+import FirestoreService from "../../../../../functions/firebase/firestore/handler/firestoreService";
+import { UserRead, UserWrite } from "../../../../../types/firebase/firestore/structure/users/userStructure";
 
 export class UserService extends FirestoreService<UserRead, UserWrite> {
   constructor(firestore: Firestore) {
