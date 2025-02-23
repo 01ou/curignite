@@ -1,6 +1,5 @@
 import { Box, Button, Stack } from '@mui/material';
 import React, { useState } from 'react';
-import Popup from '../../../components/utils/Popup';
 import CreateProblemSet from '../form/CreateProblemSet';
 
 interface ProblemSetsBottomNavigationProps {
@@ -11,6 +10,8 @@ interface ProblemSetsBottomNavigationProps {
 const ProblemSetsBottomNavigation: React.FC<ProblemSetsBottomNavigationProps> = ({ selectedIndex, onChange }) => {
   const [openCreatePopup, setOpenCreatePopup] = useState(false);
 
+  console.log(selectedIndex);
+  
   return (
     <Box sx={{ width: '100%', position: 'fixed', bottom: 0, left: 0 }}>
       <Stack
@@ -42,9 +43,10 @@ const ProblemSetsBottomNavigation: React.FC<ProblemSetsBottomNavigationProps> = 
           新しい問題集
         </Button>
       </Stack>
-      <Popup sx={{ height: "100%", bgcolor: "gray"}} open={openCreatePopup} onClose={() => setOpenCreatePopup(false)} fixedCloseButton >
-        <CreateProblemSet />
-      </Popup>
+      <CreateProblemSet
+        open={openCreatePopup}
+        onClose={() => setOpenCreatePopup(false)}
+      />
     </Box>
   );
 };

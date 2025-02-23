@@ -12,6 +12,8 @@ const useCrudProblemSets = () => {
   const { asyncStates, callAsyncFunction } = useMultipleAsyncHandler<AsyncStates>(["create"]);
 
   const createProblemSet = (data: ProblemSetWrite) => {
+    console.log(user, data);
+    
     if (user) {
       const problemSetService = serviceFactory.createUserProblemSetService();
       callAsyncFunction("create", problemSetService.create.bind(problemSetService), [data, [user.uid]]);

@@ -1,4 +1,4 @@
-import { Box, IconButton, Modal, SxProps } from "@mui/material";
+import { IconButton, Modal, Stack, SxProps } from "@mui/material";
 import { FC, ReactNode } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -8,8 +8,11 @@ interface PopupProps {
   height?: string | number;
   sx?: SxProps; // Box用のスタイル
   modalSx?: SxProps; // Modal用のスタイル
-  centerContent?: boolean;
   fixedCloseButton?: boolean;
+  stackDirection?: "row" | "column";
+  justifyContent?: "flex-start" | "center" | "flex-end" | "space-between" | "space-around" | "space-evenly",
+  alignItems?: "flex-start" | "center" | "flex-end" | "space-between" | "space-around" | "space-evenly",
+  spacing?: number,
   onClose?: () => void;
 }
 
@@ -19,20 +22,20 @@ const Popup: FC<PopupProps> = ({
   height = "fit-content",
   sx,
   modalSx,
-  centerContent = false,
   fixedCloseButton = false,
+  stackDirection = "column",
+  justifyContent,
+  alignItems = "center",
+  spacing,
   onClose,
 }) => {
-  const boxStyles: SxProps = {
+  const stackStyles: SxProps = {
     position: "relative",
     width: "95%",
     maxWidth: "lg",
     height,
     maxHeight: "95vh",
     overflow: "auto",
-    display: "flex",
-    justifyContent: centerContent ? "center" : "flex-start",
-    alignItems: centerContent ? "center" : "flex-start",
     ...sx,
   };
 
@@ -51,7 +54,13 @@ const Popup: FC<PopupProps> = ({
         ...modalSx,
       }}
     >
-      <Box sx={boxStyles}>
+      <Stack
+        direction={stackDirection}
+        justifyContent={justifyContent}
+        alignItems={alignItems}
+        spacing={spacing}
+        sx={stackStyles}
+      >
         <div id="popup-description">{children}</div>
         {onClose && (
           <IconButton
@@ -67,7 +76,7 @@ const Popup: FC<PopupProps> = ({
             <CloseIcon />
           </IconButton>
         )}
-      </Box>
+      </Stack>
     </Modal>
   );
 };
