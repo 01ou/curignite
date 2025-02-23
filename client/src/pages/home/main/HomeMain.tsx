@@ -2,14 +2,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundContainer from "../../../components/display/BackgroundContainer";
-import background from "../../../assets/room.png";
-import FloatingButton from "../../../components/inputs/FloatingButton";
+import background from "../../../assets/room.png"
 import { MenuBook, Task } from "@mui/icons-material";
+import FloatingButton from "../../../components/inputs/FloatingButton";
 import { getTextOutline } from "../../../functions/style/sxUtils";
 import CharacterDisplay from "../../auth/main/CharacterDisplay";
+import ItemCountDisplay from "../ItemCountDisplay";
 import StartButton from "../StartButton";
 import HomeBottomNavigation from "./bottomNavigation/HomeBottomNavigation";
-import ItemCountDisplay from "../ItemCountDisplay";
 import itemImage from "../../../assets/item.png";
 
 const HomeMain: React.FC = () => {

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Dialogue, DialogueElement } from "../../types/dialogue/DialogueTypes";
+import { Dialogue, DialogueElement } from "../../../types/dialogue/DialogueTypes";
 import { useNavigate } from "react-router-dom";
 
 const useInputValues = (

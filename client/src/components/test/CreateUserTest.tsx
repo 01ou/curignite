@@ -1,7 +1,7 @@
 import React from 'react';
-import useFormState from '../../hooks/form/useFormState';
+import useFormState from '../../features/hooks/form/useFormState';
 import { UserWrite } from '../../types/firebase/firestore/structure/users/userStructure';
-import useAsyncHandler from '../../hooks/form/useAsyncHandler';
+import useAsyncHandler from '../../features/hooks/form/useAsyncHandler';
 import serviceFactory from '../../firebase/firestore/factory';
 import { DocumentData, DocumentReference } from 'firebase/firestore';
 

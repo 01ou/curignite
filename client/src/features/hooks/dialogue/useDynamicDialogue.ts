@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback } from "react";
-import { Dialogue } from "../../types/dialogue/DialogueTypes";
+import { Dialogue } from "../../../types/dialogue/DialogueTypes";
 
 // プレースホルダを置き換える関数
 const replacePlaceholders = (text: string, replaces: Record<string, string>) => {

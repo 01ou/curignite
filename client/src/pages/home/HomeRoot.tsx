@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeMain from '../../features/home/main/HomeMain';
+import HomeMain from './main/HomeMain';
 
 interface HomeRootProps { }
 

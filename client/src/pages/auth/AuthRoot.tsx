@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthMain from '../../features/auth/main/AuthMain';
+import AuthMain from './main/AuthMain';
 
 interface AuthRootProps { }
 

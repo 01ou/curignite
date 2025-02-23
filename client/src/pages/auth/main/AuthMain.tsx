@@ -5,7 +5,7 @@ import { Paper, Stack, useMediaQuery } from '@mui/material';
 import backgroundImage from "../../../assets/background-water-bubble.jpg";
 import character from "../../../assets/sample-character-idle.png";
 import UserInput from './UserInput';
-import { useAuthFlow } from '../../../hooks/auth/useAuthFlow';
+import { useAuthFlow } from '../../../features/hooks/auth/useAuthFlow';
 
 interface AuthHomeProps {}
 

@@ -1,4 +1,4 @@
-import { NodeContent } from "../../types/dialogue/NodeTypes";
+import { NodeContent } from "../../../types/dialogue/NodeTypes";
 import useActiveContents from "./useActiveContents";
 import useCurrentDialogueId from "./useCurrentDialogueId";
 import useDynamicDialogue from "./useDynamicDialogue";

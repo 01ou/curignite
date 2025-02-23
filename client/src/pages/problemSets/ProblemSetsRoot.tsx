@@ -1,5 +1,5 @@
 import React from 'react';
-import ProblemSetsMain from '../../features/problemSets/main/ProblemSetsMain';
+import ProblemSetsMain from './main/ProblemSetsMain';
 
 interface ProblemSetsRootProps { }
 

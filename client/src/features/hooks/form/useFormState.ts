@@ -1,6 +1,6 @@
 import { useState, useCallback, ChangeEvent } from "react";
-import { keyMirror } from "../../functions/objectUtils/groupUtils";
-import { ArrayFieldChangeAction, FormStateChangeAction } from "../../types/from/formStateTypes";
+import { keyMirror } from "../../../functions/objectUtils/groupUtils";
+import { ArrayFieldChangeAction, FormStateChangeAction } from "../../../types/from/formStateTypes";
 
 const useFormState = <T extends Record<string, any>>(initialState: T) => {
   const [formState, setFormState] = useState<T>(initialState);
