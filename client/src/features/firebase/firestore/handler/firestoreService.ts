@@ -148,12 +148,12 @@ abstract class FirestoreService<
     return CRUDHandler.softDelete<Document>(collectionRef, documentId, await this.formatPartialWriteData(updateFields));
   }
 
-  async getAllAsQuerySnapshot(parentDocumentIds: string[] = [], ...queryConstraints: QueryConstraint[]): Promise<QuerySnapshot<Read>> {
+  async getAllAsQuerySnapshot(parentDocumentIds: string[] = [], queryConstraints: QueryConstraint[] = []): Promise<QuerySnapshot<Read>> {
     const collectionRef = this.getCollectionRef(parentDocumentIds) as CollectionReference<Read>;
     return CRUDHandler.getAllAsQuerySnapshot<Read>(collectionRef, ...queryConstraints);
   }
 
-  async getAll(parentDocumentIds: string[] = [], ...queryConstraints: QueryConstraint[]): Promise<Read[]> {
+  async getAll(parentDocumentIds: string[] = [], queryConstraints: QueryConstraint[] = []): Promise<Read[]> {
     console.log('called get all');
     const collectionRef = this.getCollectionRef(parentDocumentIds);
     return CRUDHandler.getAll<Read>(collectionRef, ...queryConstraints);

@@ -1,6 +1,7 @@
 import { useState, useCallback, ChangeEvent } from "react";
 import { keyMirror } from "../../../functions/objectUtils/groupUtils";
 import { ArrayFieldChangeAction, FormStateChangeAction } from "../../../types/from/formStateTypes";
+import { SelectChangeEvent } from "@mui/material";
 
 const useFormState = <T extends Record<string, any>>(initialState: T) => {
   const [formState, setFormState] = useState<T>(initialState);
@@ -56,10 +57,16 @@ const useFormState = <T extends Record<string, any>>(initialState: T) => {
 
   const createInputProps = (name: keyof T) => {
     return {
-      value: formState[name],
+      value: formState[name] ?? "",
       name: String(name),
-      onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { name, type, value } = e.target;
+      
+      onChange: (
+        e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | SelectChangeEvent<string>,
+        ..._: any[]
+      ) => {
+        const { name, value } = e.target;
+        
+        const type = "type" in e.target ? e.target.type : "";
 
         if (type === "checkbox") {
           onChangeFormState({ name, value: (e.target as HTMLInputElement).checked });
@@ -73,7 +80,7 @@ const useFormState = <T extends Record<string, any>>(initialState: T) => {
         }
       }
     };
-  };
+  };  
 
   return {
     formState,

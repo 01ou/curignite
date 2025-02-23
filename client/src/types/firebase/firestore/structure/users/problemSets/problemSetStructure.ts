@@ -1,13 +1,13 @@
+import { Subject } from "../../../../../app/subjects";
 import { BaseDocument, BaseDocumentRead, BaseDocumentWrite } from "../../../baseTypes";
 
-export interface ProblemSetData {
+export interface ProblemSetData extends BaseDocument {
   name: string;
-  subject: string;
+  subject: Subject;
+  detailedSubject: string | null;
 }
 
-export interface ProblemSetDocument extends BaseDocument {
-  name: string;
-  subject: string;
+export interface ProblemSetDocument extends ProblemSetData {
   recentAccess: Record<string, number>;
 }
 

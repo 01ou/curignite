@@ -10,8 +10,6 @@ interface ProblemSetsBottomNavigationProps {
 const ProblemSetsBottomNavigation: React.FC<ProblemSetsBottomNavigationProps> = ({ selectedIndex, onChange }) => {
   const [openCreatePopup, setOpenCreatePopup] = useState(false);
 
-  console.log(selectedIndex);
-  
   return (
     <Box sx={{ width: '100%', position: 'fixed', bottom: 0, left: 0 }}>
       <Stack

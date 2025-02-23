@@ -12,7 +12,7 @@ interface ProblemSetContainerProps {
 
 const ProblemSetContainer: React.FC<ProblemSetContainerProps> = ({ label, intimacy, backgroundSrc, overlayHexColor}) => {
   return (
-    <OverlayIconButton size={105} src={backgroundSrc} overlayHexColor={overlayHexColor} overlayAlpha={0.8} imageScale={1.8} >
+    <OverlayIconButton size={90} src={backgroundSrc} overlayHexColor={overlayHexColor} overlayAlpha={0.8} imageScale={1.8} >
       <Stack direction="column" justifyContent="center" alignItems="center" spacing={0} >
         <Typography variant='subtitle1' color='white' pt={2} sx={{ whiteSpace: "nowrap" }} >{label}</Typography>
         <Stack direction="row" justifyContent="center" alignItems="center" spacing={-0.5} >

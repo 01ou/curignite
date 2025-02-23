@@ -1,21 +1,27 @@
 // src/i18n.ts
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import dialogueJa from "./locales/auth/dialogueJa.json"
-import dialogueEn from "./locales/auth/dialogueEn.json"
-import authErrorJa from "./locales/auth/authErrorJa.json";
+
+import authErrorJa from "./auth/authErrorJa.json";
+import dialogueJa from "./auth/dialogueJa.json"
+import subjectsJa from "./subjects/subjectsJa.json";
+
+import dialogueEn from "./auth/dialogueEn.json"
+import subjectsEn from "./subjects/subjectsEn.json";
 
 // 翻訳リソースをまとめる
 const resources = {
   en: {
     translation: {
-      ...dialogueEn
+      ...dialogueEn,
+      ...subjectsEn
     }
   },
   ja: {
     translation: {
       ...dialogueJa,
-      ...authErrorJa
+      ...authErrorJa,
+      ...subjectsJa
     }
   },
 };

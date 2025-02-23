@@ -103,9 +103,12 @@ const useMultipleAsyncHandler = <StateTypes extends Record<string, any>>(keys?: 
     args: A,
     onFailedMessage?: string
   ): Promise<Awaited<StateTypes[K]> | null> => {
-    if (!asyncStates[key]) {
-      setAsyncStatesMemo((prev) => ({ ...prev, [key]: initializeState() }));
-    }
+    setAsyncStatesMemo((prev) => {
+      if (!prev[key]) {
+        return { ...prev, [key]: initializeState() };
+      }
+      return prev;
+    });
     startLoading(key);
     try {
       const result = await func(...args);
@@ -115,7 +118,7 @@ const useMultipleAsyncHandler = <StateTypes extends Record<string, any>>(keys?: 
       logError(key, error, onFailedMessage);
       return null;
     }
-  }, [asyncStates, initializeState, logError, setAsyncStatesMemo, setDataOnSuccess, startLoading]);
+  }, [initializeState, logError, setAsyncStatesMemo, setDataOnSuccess, startLoading]);
 
   const resetGlobalError = useCallback(() => {
     setGlobalError({ error: null, message: null });

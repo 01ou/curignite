@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Dialogue, DialogueElement } from "../../../types/dialogue/DialogueTypes";
 import { NodeContent } from "../../../types/dialogue/NodeTypes";
-import i18n from "../../../i18n";
+import i18n from "../../../locales/i18n";
 
 const useLocalizedDialogues = (
   nodeContents: Record<string, NodeContent>,
