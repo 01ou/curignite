@@ -4,6 +4,7 @@ import NotFound from './pages/error/NotFound';
 import CreateUserTest from './components/test/CreateUserTest';
 import AuthRoot from './pages/auth/AuthRoot';
 import HomeRoot from './pages/home/HomeRoot';
+import ProblemSetsRoot from './pages/problemSets/ProblemSetsRoot';
 
 const App: React.FC = () => {
 
@@ -11,6 +12,7 @@ const App: React.FC = () => {
     <Routes>
       <Route path='home' element={<HomeRoot />} />
       <Route path='auth' element={<AuthRoot />} />
+      <Route path='problemSets' element={<ProblemSetsRoot />} />
       <Route path='auth/:step' element={<AuthRoot />} />
       <Route path='create' element={<CreateUserTest />} />
       <Route path="*" element={<NotFound />} />

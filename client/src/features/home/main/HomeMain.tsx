@@ -1,5 +1,7 @@
+// HomeMain.tsx
 import React from "react";
-import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import BackgroundContainer from "../../../components/display/BackgroundContainer";
 import background from "../../../assets/room.png";
 import FloatingButton from "../../../components/inputs/FloatingButton";
 import { MenuBook, Task } from "@mui/icons-material";
@@ -8,28 +10,15 @@ import CharacterDisplay from "../../auth/main/CharacterDisplay";
 import StartButton from "../StartButton";
 import HomeBottomNavigation from "./bottomNavigation/HomeBottomNavigation";
 import ItemCountDisplay from "../ItemCountDisplay";
-
 import itemImage from "../../../assets/item.png";
 
-interface HomeMainProps {}
+const HomeMain: React.FC = () => {
+  const navigate = useNavigate();
 
-const HomeMain: React.FC<HomeMainProps> = ({}) => {
   return (
-    <Box
-      sx={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        backgroundImage: `url(${background})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <BackgroundContainer backgroundImage={background}>
       <CharacterDisplay />
-      <FloatingButton 
+      <FloatingButton
         text="問題集"
         top={10}
         left={10}
@@ -41,14 +30,15 @@ const HomeMain: React.FC<HomeMainProps> = ({}) => {
         textVariant="h6"
         buttonSx={{
           border: 2,
-          borderColor: "#301C1C"
+          borderColor: "#301C1C",
         }}
         labelSx={{
           color: "#FCFCFC",
-          ...getTextOutline("#301C1C", 1)
+          ...getTextOutline("#301C1C", 1),
         }}
+        onClick={() => navigate("/problemSets")}
       />
-      <FloatingButton 
+      <FloatingButton
         text="課題"
         top={105}
         left={10}
@@ -60,11 +50,11 @@ const HomeMain: React.FC<HomeMainProps> = ({}) => {
         textVariant="h6"
         buttonSx={{
           border: 2,
-          borderColor: "#301C1C"
+          borderColor: "#301C1C",
         }}
         labelSx={{
           color: "#FCFCFC",
-          ...getTextOutline("#301C1C", 1)
+          ...getTextOutline("#301C1C", 1),
         }}
       />
       <StartButton />
@@ -81,10 +71,10 @@ const HomeMain: React.FC<HomeMainProps> = ({}) => {
           py: 0.5,
           borderRadius: 8,
           border: 2,
-          borderColor: "#301C1C"
+          borderColor: "#301C1C",
         }}
       />
-    </Box>
+    </BackgroundContainer>
   );
 };
 

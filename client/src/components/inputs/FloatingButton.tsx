@@ -25,6 +25,7 @@ export interface FloatingButtonProps {
   buttonSx?: SxProps<Theme>;
   /** ラベルのスタイルを上書きするための sx */
   labelSx?: SxProps<Theme>;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 const FloatingButton: React.FC<FloatingButtonProps> = ({
@@ -44,6 +45,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
   labelPosition = "bottom",
   buttonSx,
   labelSx,
+  onClick
 }) => {
   // IconButton の基本スタイル
   const defaultButtonSx: SxProps<Theme> = {
@@ -62,6 +64,7 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
     height: size,
     width: size,
     overflow: "visible", // ラベルなどがはみ出す場合に対応
+    
   };
 
   // ラベルの基本スタイル（配置位置で調整）
@@ -88,7 +91,8 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
   }
 
   return (
-    <IconButton sx={{
+    <IconButton
+      sx={{
         ...defaultButtonSx,
         ...buttonSx, 
         transition: "transform 0.2s ease-in-out", // 滑らかな拡大
@@ -96,7 +100,9 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({
           transform: "scale(1.1)", // ホバー時に 1.1 倍に拡大
           bgcolor: hoverBgcolor === undefined ? bgcolor : hoverBgcolor
         }
-      }}>
+      }}
+      onClick={onClick}
+    >
       {/* src が指定されている場合は Avatar を、なければ children を描画 */}
       <Box mb={contentsMb} >
         {src ? (
