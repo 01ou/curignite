@@ -7,12 +7,12 @@ import { useCallback } from "react";
 
 interface AsyncStates {
   "create": DocumentReference<ProblemSetDocument, DocumentData>,
-  "read": ProblemSetRead[]
+  "readAll": ProblemSetRead[]
 }
 
 const useCrudProblemSets = () => {
   const user = useAppSelector(state => state.user.authUser);
-  const { asyncStates, callAsyncFunction } = useMultipleAsyncHandler<AsyncStates>(["create", "read"]);
+  const { asyncStates, callAsyncFunction } = useMultipleAsyncHandler<AsyncStates>(["create", "readAll"]);
 
   const problemSetService = ServiceFactory.getInstance().createUserProblemSetService();
 
@@ -24,7 +24,7 @@ const useCrudProblemSets = () => {
 
   const readAllProblemSets = useCallback(() => {
     if (user) {
-      callAsyncFunction("read", problemSetService.getAll.bind(problemSetService), [[user.uid]]);
+      callAsyncFunction("readAll", problemSetService.getAll.bind(problemSetService), [[user.uid]]);
     }
   }, [user, callAsyncFunction, problemSetService]);
 

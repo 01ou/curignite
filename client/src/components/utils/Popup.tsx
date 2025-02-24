@@ -8,7 +8,7 @@ interface PopupProps {
   height?: string | number;
   sx?: SxProps; // Box用のスタイル
   modalSx?: SxProps; // Modal用のスタイル
-  fixedCloseButton?: boolean;
+  absoluteCloseButton?: boolean;
   stackDirection?: "row" | "column";
   justifyContent?: "flex-start" | "center" | "flex-end" | "space-between" | "space-around" | "space-evenly",
   alignItems?: "flex-start" | "center" | "flex-end" | "space-between" | "space-around" | "space-evenly",
@@ -17,12 +17,12 @@ interface PopupProps {
 }
 
 const Popup: FC<PopupProps> = ({
-  open = true,
+  open,
   children,
-  height = "fit-content",
+  height = "100%",
   sx,
   modalSx,
-  fixedCloseButton = false,
+  absoluteCloseButton = false,
   stackDirection = "column",
   justifyContent,
   alignItems = "center",
@@ -41,7 +41,7 @@ const Popup: FC<PopupProps> = ({
 
   return (
     <Modal
-      open={open}
+      open={open === true || (open === undefined && (!!children || !onClose)) }
       onClose={onClose}
       aria-labelledby="popup-title"
       aria-describedby="popup-description"
@@ -55,20 +55,21 @@ const Popup: FC<PopupProps> = ({
       }}
     >
       <Stack
+        id="popup-description"
         direction={stackDirection}
         justifyContent={justifyContent}
         alignItems={alignItems}
         spacing={spacing}
         sx={stackStyles}
       >
-        <div id="popup-description">{children}</div>
+        {children}
         {onClose && (
           <IconButton
             onClick={onClose}
             size="large"
             color="warning"
             sx={{
-              position: fixedCloseButton ? "fixed" : "absolute",
+              position: absoluteCloseButton ? "absolute" : "fixed",
               top: 8,
               right: 8,
             }}

@@ -3,7 +3,7 @@ import useFormState from '../../features/hooks/form/useFormState';
 import { UserWrite } from '../../types/firebase/firestore/structure/users/userStructure';
 import useAsyncHandler from '../../features/hooks/form/useAsyncHandler';
 import { DocumentData, DocumentReference } from 'firebase/firestore';
-import serviceFactory from '../../features/firebase/firestore/factory';
+import { ServiceFactory } from '../../features/firebase/firestore/factory';
 
 interface CreateUserTestProps { }
 
@@ -28,7 +28,7 @@ const CreateUserTest: React.FC<CreateUserTestProps> = () => {
       photoURL: null,
       settings: formState.settings
     }
-    const userService = serviceFactory.createUserService()
+    const userService = ServiceFactory.getInstance().createUserService()
     callAsyncFunction(userService.create.bind(userService), [data])
   }
 

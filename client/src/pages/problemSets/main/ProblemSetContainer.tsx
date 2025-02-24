@@ -8,11 +8,12 @@ interface ProblemSetContainerProps {
   intimacy: number;
   backgroundSrc: string;
   overlayHexColor: string;
+  onClick: () => void;
 }
 
-const ProblemSetContainer: React.FC<ProblemSetContainerProps> = ({ label, intimacy, backgroundSrc, overlayHexColor}) => {
+const ProblemSetContainer: React.FC<ProblemSetContainerProps> = ({ label, intimacy, backgroundSrc, overlayHexColor, onClick }) => {
   return (
-    <OverlayIconButton size={90} src={backgroundSrc} overlayHexColor={overlayHexColor} overlayAlpha={0.8} imageScale={1.8} >
+    <OverlayIconButton size={90} src={backgroundSrc} overlayHexColor={overlayHexColor} overlayAlpha={0.8} imageScale={1.8} onClick={onClick} >
       <Stack direction="column" justifyContent="center" alignItems="center" spacing={0} >
         <Typography variant='subtitle1' color='white' pt={2} sx={{ whiteSpace: "nowrap" }} >{label}</Typography>
         <Stack direction="row" justifyContent="center" alignItems="center" spacing={-0.5} >

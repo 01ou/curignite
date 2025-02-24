@@ -12,8 +12,8 @@ export function hexToRgba(hex: string, alpha: number): string {
 
   // HEXが6桁以外の場合はエラー
   if (cleanHex.length !== 6) {
-    console.error("Invalid HEX color format");
-    return "";
+    console.error("Invalid HEX color format:", hex);
+    return hex;
   }
 
   // RGBに変換
