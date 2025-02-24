@@ -9,12 +9,11 @@ export class UserProblemSetService extends FirestoreService<ProblemSetRead, Prob
 
   protected async formatWriteData(data: ProblemSetWrite): Promise<ProblemSetDocument> {
     const { name, subject, detailedSubject } = data;
-    this.checkRequiredProperties([name, subject, detailedSubject]);
-    return { createdById: await this.getUid(), name, subject, detailedSubject, recentAccess: {} }
+    return { name, subject, detailedSubject, recentAccess: {} }
   }
 
   protected async formatPartialWriteData(data: Partial<ProblemSetWrite>): Promise<Partial<ProblemSetDocument>> {
     const { name, subject } = data;
-    return { createdById: await this.getUid(), name, subject, recentAccess: {} };
+    return { name, subject };
   }
 }

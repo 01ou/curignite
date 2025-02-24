@@ -9,12 +9,11 @@ export class UserService extends FirestoreService<UserRead, UserWrite> {
 
   protected async formatWriteData(data: UserWrite): Promise<UserWrite> {
     const { displayName, email, photoURL, settings } = data;
-    this.checkRequiredProperties([data, email, settings]);
-    return { createdById: await this.getUid(), displayName, email, photoURL: photoURL ?? null, settings };
+    return { displayName, email, photoURL: photoURL, settings };
   }
 
   protected async formatPartialWriteData(data: Partial<UserWrite>): Promise<Partial<UserWrite>> {
     const { displayName, email, photoURL, settings } = data;
-    return { createdById: await this.getUid(), displayName, email, photoURL, settings };
+    return { displayName, email, photoURL, settings };
   }
 }

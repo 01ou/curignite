@@ -1,11 +1,12 @@
-import { ProblemSetRead, ProblemSetWrite } from "../../../../types/firebase/firestore/structure/users/problemSets/problemSetStructure";
-import serviceFactory from "../../../firebase/firestore/factory";
+import { DocumentData, DocumentReference } from "firebase/firestore";
+import { ProblemSetDocument, ProblemSetRead, ProblemSetWrite } from "../../../../types/firebase/firestore/structure/users/problemSets/problemSetStructure";
+import { ServiceFactory } from "../../../firebase/firestore/factory";
 import { useAppSelector } from "../../../redux/hooks";
 import useMultipleAsyncHandler from "../../form/useMultipleAsyncHandler";
 import { useCallback } from "react";
 
 interface AsyncStates {
-  "create": any,
+  "create": DocumentReference<ProblemSetDocument, DocumentData>,
   "read": ProblemSetRead[]
 }
 
@@ -13,7 +14,7 @@ const useCrudProblemSets = () => {
   const user = useAppSelector(state => state.user.authUser);
   const { asyncStates, callAsyncFunction } = useMultipleAsyncHandler<AsyncStates>(["create", "read"]);
 
-  const problemSetService = serviceFactory.createUserProblemSetService();
+  const problemSetService = ServiceFactory.getInstance().createUserProblemSetService();
 
   const createProblemSet = useCallback((data: ProblemSetWrite) => {
     if (user) {
@@ -27,7 +28,7 @@ const useCrudProblemSets = () => {
     }
   }, [user, callAsyncFunction, problemSetService]);
 
-  return { asyncStates, createProblemSet, readAllProblemSets }
+  return { asyncStates, createProblemSet, readAllProblemSets };
 }
 
 export default useCrudProblemSets;

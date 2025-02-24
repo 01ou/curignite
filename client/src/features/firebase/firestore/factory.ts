@@ -2,36 +2,69 @@ import { Firestore } from 'firebase/firestore';
 import { db } from '../firebase';
 import { UserService } from './services/users/userService';
 import { UserProblemSetService } from './services/users/problemSets/userProblemSetsService';
+import { ProblemSetCategoryService } from './services/users/problemSets/categories/problemSetCategoriesService';
+import { CategoryProblemService } from './services/users/problemSets/categories/problems/categoryProblemsService';
+import { ProblemSetHistoryService } from './services/users/problemSets/histories/problemSetHistoriesService';
 
 type ConstructorWithArgs<T, Args extends any[]> = new (...args: Args) => T;
 
-export class ServiceFactory {
-  private instances: Map<string, any> = new Map();
+enum ServiceKeys {
+  User = "user",
+  UserProblemSet = "userProblemSet",
+  ProblemSetCategory = "problemSetCategory",
+  CategoryProblem = "categoryProblem",
+  ProblemSetHistory = "problemSetHistory",
+}
 
-  constructor(
-    private firestore: Firestore
-  ) {}
+export class ServiceFactory {
+  private static instance: ServiceFactory;
+  private instances: Map<ServiceKeys, any> = new Map();
+
+  private constructor(private firestore: Firestore) {}
+
+  static getInstance(): ServiceFactory {
+    if (!ServiceFactory.instance) {
+      ServiceFactory.instance = new ServiceFactory(db);
+    }
+    return ServiceFactory.instance;
+  }
 
   private getInstance<T, Args extends any[]>(
-    key: string,
+    key: ServiceKeys,
     classConstructor: ConstructorWithArgs<T, Args>,
     ...args: Args
   ): T {
-    if (!this.instances.get(key)) {
+    if (!this.instances.has(key)) {
       this.instances.set(key, new classConstructor(...args));
     }
     return this.instances.get(key) as T;
   }
 
+  clearInstances() {
+    this.instances.clear();
+  }
+
+  deleteInstance(key: ServiceKeys) {
+    this.instances.delete(key);
+  }
+
   createUserService() {
-    return this.getInstance("user", UserService, this.firestore);
+    return this.getInstance(ServiceKeys.User, UserService, this.firestore);
   }
 
   createUserProblemSetService() {
-    return this.getInstance("user/problemSet", UserProblemSetService, this.firestore);
+    return this.getInstance(ServiceKeys.UserProblemSet, UserProblemSetService, this.firestore);
+  }
+
+  createProblemSetCategoryService() {
+    return this.getInstance(ServiceKeys.ProblemSetCategory, ProblemSetCategoryService, this.firestore);
+  }
+
+  createCategoryProblemService() {
+    return this.getInstance(ServiceKeys.CategoryProblem, CategoryProblemService, this.firestore);
+  }
+
+  createProblemSetHistoryService() {
+    return this.getInstance(ServiceKeys.ProblemSetHistory, ProblemSetHistoryService, this.firestore);
   }
 }
-
-const serviceFactory = new ServiceFactory(db);
-
-export default serviceFactory;

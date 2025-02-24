@@ -57,7 +57,7 @@ const ProblemSetsMain: React.FC<ProblemSetsMainProps> = () => {
               label={problemSet.name}
               intimacy={30}
               overlayHexColor={getSubjectSetting(problemSet.subject).color}
-              backgroundSrc={getSubjectSetting(problemSet.subject).color}
+              backgroundSrc={getSubjectSetting(problemSet.subject).image}
             />
           </Grid>
         ))}

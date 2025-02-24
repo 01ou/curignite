@@ -44,7 +44,7 @@ abstract class FirestoreService<
 
   protected abstract formatPartialWriteData(data: Partial<Write>): Promise<Partial<Document>>;  
 
-  getUid(): Promise<string> {
+  private getUid(): Promise<string> {
     return new Promise((resolve, reject) => {
       const auth = getAuth();
       const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -58,11 +58,22 @@ abstract class FirestoreService<
     });
   }
 
-  protected checkRequiredProperties(properties: { [key: string]: any }) {
+  private checkRequiredProperties(properties: Record<string, any>) {
     const missingProperties = Object.keys(properties).filter(key => properties[key] === undefined);
     if (missingProperties.length > 0) {
         throw new Error(`必要なプロパティが足りていません: ${missingProperties.join(', ')}`);
     }
+  }
+
+  private async organizeWriteData(data: Write): Promise<Document & { createdById: string }> {
+    const formatData = await this.formatWriteData(data) as Document & { createdById: string };
+    formatData.createdById = await this.getUid();
+    this.checkRequiredProperties(formatData);
+    return formatData;
+  }
+
+  private async organizePartialWriteData(data: Partial<Write>): Promise<Partial<Document>> {
+    return this.formatPartialWriteData(data);
   }
 
   // ======================================================================
@@ -110,13 +121,13 @@ abstract class FirestoreService<
   async create(data: Write, parentDocumentIds: string[] = []): Promise<DocumentReference<Document>> {
     console.log('called create');
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    return CRUDHandler.create<Document>(collectionRef, await this.formatWriteData(data));
+    return CRUDHandler.create<Document>(collectionRef, await this.organizeWriteData(data));
   }
 
   async createWithId(data: Write, documentId: string, parentDocumentIds: string[] = [], merge: boolean = false): Promise<void> {
     console.log('called createWithId');
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    return CRUDHandler.createWithId<Document>(collectionRef, documentId, await this.formatWriteData(data), merge);
+    return CRUDHandler.createWithId<Document>(collectionRef, documentId, await this.organizeWriteData(data), merge);
   }
 
   protected async readAsDocumentSnapshot(documentId: string, parentDocumentIds: string[] = []): Promise<DocumentSnapshot<Read>> {
@@ -133,7 +144,7 @@ abstract class FirestoreService<
   async update(data: Partial<Write>, documentId: string, parentDocumentIds: string[] = []): Promise<void> {
     console.log('called update');
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    return CRUDHandler.update<Document>(collectionRef, documentId, await this.formatPartialWriteData(data));
+    return CRUDHandler.update<Document>(collectionRef, documentId, await this.organizePartialWriteData(data));
   }
 
   async hardDelete(documentId: string, parentDocumentIds: string[] = []): Promise<void> {
@@ -145,7 +156,7 @@ abstract class FirestoreService<
   async softDelete(documentId: string, parentDocumentIds: string[] = [], updateFields: Partial<Write> = {}): Promise<void> {
     console.log('called soft delete');
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    return CRUDHandler.softDelete<Document>(collectionRef, documentId, await this.formatPartialWriteData(updateFields));
+    return CRUDHandler.softDelete<Document>(collectionRef, documentId, await this.organizePartialWriteData(updateFields));
   }
 
   async getAllAsQuerySnapshot(parentDocumentIds: string[] = [], queryConstraints: QueryConstraint[] = []): Promise<QuerySnapshot<Read>> {
@@ -255,12 +266,12 @@ abstract class FirestoreService<
 
   async setInBatch(data: Write, documentId: string, parentDocumentIds: string[] = []): Promise<void> {
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    this.batchHandler.set(collectionRef, documentId, await this.formatWriteData(data));
+    this.batchHandler.set(collectionRef, documentId, await this.organizeWriteData(data));
   }
 
   async updateInBatch(data: Partial<Write>, documentId: string, parentDocumentIds: string[] = []): Promise<void> {
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    this.batchHandler.update(collectionRef, documentId, await this.formatPartialWriteData(data));
+    this.batchHandler.update(collectionRef, documentId, await this.organizePartialWriteData(data));
   }
 
   deleteInBatch(documentId: string, parentDocumentIds: string[] = []): void {
@@ -292,12 +303,12 @@ abstract class FirestoreService<
 
   async setInTransaction(data: Write, documentId: string, parentDocumentIds: string[] = []): Promise<void> {
     const collectionRef = this.getCollectionRef(parentDocumentIds) as CollectionReference;
-    this.transactionHandler.set(collectionRef, documentId, await this.formatWriteData(data));
+    this.transactionHandler.set(collectionRef, documentId, await this.organizeWriteData(data));
   }
 
   async updateInTransaction(data: Partial<Write>, documentId: string, parentDocumentIds: string[] = []): Promise<void> {
     const collectionRef = this.getCollectionRef(parentDocumentIds) as CollectionReference;
-    this.transactionHandler.update(collectionRef, documentId, await this.formatPartialWriteData(data));
+    this.transactionHandler.update(collectionRef, documentId, await this.organizePartialWriteData(data));
   }
 
   deleteInTransaction(documentId: string, parentDocumentIds: string[] = []): void {

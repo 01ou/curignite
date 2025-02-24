@@ -1,15 +1,16 @@
 import { Subject } from "../../../../../app/subjects";
 import { BaseDocument, BaseDocumentRead, BaseDocumentWrite } from "../../../baseTypes";
 
-export interface ProblemSetData extends BaseDocument {
+export interface BaseProblemSet {
   name: string;
   subject: Subject;
   detailedSubject: string | null;
 }
 
-export interface ProblemSetDocument extends ProblemSetData {
+export interface ProblemSetData extends BaseProblemSet {
   recentAccess: Record<string, number>;
 }
 
 export type ProblemSetRead = BaseDocumentRead & ProblemSetData;
-export type ProblemSetWrite = BaseDocumentWrite & ProblemSetData;
+export type ProblemSetWrite = BaseDocumentWrite & BaseProblemSet;
+export type ProblemSetDocument = BaseDocument & ProblemSetData;
