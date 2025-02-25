@@ -7,7 +7,8 @@ import { useCallback } from "react";
 
 interface AsyncStates {
   "create": DocumentReference<ProblemSetDocument, DocumentData>,
-  "readAll": ProblemSetRead[]
+  "readAll": ProblemSetRead[],
+  "update": void
 }
 
 const useCrudProblemSets = () => {
@@ -28,7 +29,14 @@ const useCrudProblemSets = () => {
     }
   }, [user, callAsyncFunction, problemSetService]);
 
-  return { asyncStates, createProblemSet, readAllProblemSets };
+  const updateProblemSet = useCallback((data: Partial<ProblemSetWrite>, problemSetId: string) => {
+    if (user) {
+      callAsyncFunction("update", problemSetService.update.bind(problemSetService), [data, problemSetId, [user.uid]]);
+    }
+  }, [user, callAsyncFunction, problemSetService]);
+
+
+  return { asyncStates, createProblemSet, readAllProblemSets, updateProblemSet };
 }
 
 export default useCrudProblemSets;

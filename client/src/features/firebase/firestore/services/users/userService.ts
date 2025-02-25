@@ -7,12 +7,12 @@ export class UserService extends FirestoreService<UserRead, UserWrite> {
     super(firestore, ["users"]);
   }
 
-  protected async formatWriteData(data: UserWrite): Promise<UserWrite> {
+  protected filterWriteData(data: UserWrite): UserWrite {
     const { displayName, email, photoURL, settings } = data;
     return { displayName, email, photoURL: photoURL, settings };
   }
 
-  protected async formatPartialWriteData(data: Partial<UserWrite>): Promise<Partial<UserWrite>> {
+  protected filterPartialWriteData(data: Partial<UserWrite>): Partial<UserWrite> {
     const { displayName, email, photoURL, settings } = data;
     return { displayName, email, photoURL, settings };
   }

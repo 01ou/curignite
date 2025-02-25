@@ -2,7 +2,7 @@ import { Subject } from "../../../../../app/subjects";
 import { BaseDocument, BaseDocumentRead, BaseDocumentWrite } from "../../../baseTypes";
 
 export interface BaseProblemSet {
-  name: string;
+  setName: string;
   subject: Subject;
   detailedSubject: string | null;
 }

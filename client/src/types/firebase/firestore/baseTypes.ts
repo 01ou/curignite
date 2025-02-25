@@ -3,7 +3,7 @@ import { DocumentData, FieldValue } from "firebase/firestore";
 // すべての動的Firestoreドキュメントに存在するべきフィールド
 export type BaseDocumentWrite = DocumentData;
 
-export interface BaseDocumentRead {
+export interface BaseDocumentRead extends DocumentData {
     path: string;
     parentId: string;
     createdById: string; // 作成者のUserId

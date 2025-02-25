@@ -10,7 +10,7 @@ interface AsyncStates {
   "readAll": CategoryProblemRead[]
 }
 
-const useCrudProblemSetHistories = () => {
+const useCurdCategoryProblems = () => {
   const user = useAppSelector(state => state.user.authUser);
   const { asyncStates, callAsyncFunction } = useMultipleAsyncHandler<AsyncStates>(["create", "readAll"]);
 
@@ -31,4 +31,4 @@ const useCrudProblemSetHistories = () => {
   return { asyncStates, createProblem, readAllProblems };
 }
 
-export default useCrudProblemSetHistories;
+export default useCurdCategoryProblems;

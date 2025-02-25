@@ -88,9 +88,9 @@ class BatchHandler<Write extends BaseDocument> {
    * @param documentId 作成するドキュメントのID
    * @param data 作成するデータ
    */
-  set(collectionRef: CollectionReference, documentId: string, data: Write): void {
+  set(data: Write, collectionRef: CollectionReference, documentId: string | null): void {
     const batch = this.getActiveBatch(collectionRef);
-    const docRef = doc(collectionRef, documentId);
+    const docRef = documentId ? doc(collectionRef, documentId) : doc(collectionRef);
     batch.set(docRef, this.writePreprocessing(data));
   }
 
@@ -100,7 +100,7 @@ class BatchHandler<Write extends BaseDocument> {
    * @param documentId 更新するドキュメントのID
    * @param data 更新する部分データ
    */
-  update(collectionRef: CollectionReference, documentId: string, data: Partial<Write>): void {
+  update(data: Partial<Write>, collectionRef: CollectionReference, documentId: string): void {
     const batch = this.getActiveBatch(collectionRef);
     const docRef = doc(collectionRef, documentId);
     batch.update(docRef, data as Write);

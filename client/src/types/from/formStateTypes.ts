@@ -5,21 +5,18 @@ export type FormStateChangeAction<T = any> = {
 
 interface ElementReplaceAction {
     operation: "replace";
-    name: string;
     value: any;
     index: number;
 }
 
 interface ElementDeleteAction {
     operation: "delete";
-    name: string;
     index: number;
 }
 
-interface ElementPushAction {
+interface ElementPushAction<Value = any> {
     operation: "push";
-    name: string;
-    value: any;
+    value: Value;
 }
 
-export type ArrayFieldChangeAction = ElementReplaceAction | ElementDeleteAction | ElementPushAction; 
+export type ArrayFieldChangeAction<Value = any> = ElementReplaceAction | ElementDeleteAction | ElementPushAction<Value>; 

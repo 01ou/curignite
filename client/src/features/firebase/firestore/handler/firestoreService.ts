@@ -40,9 +40,9 @@ abstract class FirestoreService<
    * サブクラスで実装してください。
    * @param data 書き込むデータ
    */
-  protected abstract formatWriteData(data: Write): Promise<Document>;  
+  protected abstract filterWriteData(data: Write): Document;  
 
-  protected abstract formatPartialWriteData(data: Partial<Write>): Promise<Partial<Document>>;  
+  protected abstract filterPartialWriteData(data: Partial<Write>): Partial<Document>;  
 
   private getUid(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -66,14 +66,14 @@ abstract class FirestoreService<
   }
 
   private async organizeWriteData(data: Write): Promise<Document & { createdById: string }> {
-    const formatData = await this.formatWriteData(data) as Document & { createdById: string };
+    const formatData = this.filterWriteData(data) as Document & { createdById: string };
     formatData.createdById = await this.getUid();
     this.checkRequiredProperties(formatData);
     return formatData;
   }
 
-  private async organizePartialWriteData(data: Partial<Write>): Promise<Partial<Document>> {
-    return this.formatPartialWriteData(data);
+  private organizePartialWriteData(data: Partial<Write>): Partial<Document> {
+    return this.filterPartialWriteData(data);
   }
 
   // ======================================================================
@@ -144,7 +144,7 @@ abstract class FirestoreService<
   async update(data: Partial<Write>, documentId: string, parentDocumentIds: string[] = []): Promise<void> {
     console.log('called update');
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    return CRUDHandler.update<Document>(collectionRef, documentId, await this.organizePartialWriteData(data));
+    return CRUDHandler.update<Document>(collectionRef, documentId, this.organizePartialWriteData(data));
   }
 
   async hardDelete(documentId: string, parentDocumentIds: string[] = []): Promise<void> {
@@ -156,7 +156,7 @@ abstract class FirestoreService<
   async softDelete(documentId: string, parentDocumentIds: string[] = [], updateFields: Partial<Write> = {}): Promise<void> {
     console.log('called soft delete');
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    return CRUDHandler.softDelete<Document>(collectionRef, documentId, await this.organizePartialWriteData(updateFields));
+    return CRUDHandler.softDelete<Document>(collectionRef, documentId, this.organizePartialWriteData(updateFields));
   }
 
   async getAllAsQuerySnapshot(parentDocumentIds: string[] = [], queryConstraints: QueryConstraint[] = []): Promise<QuerySnapshot<Read>> {
@@ -264,14 +264,14 @@ abstract class FirestoreService<
     await this.batchHandler.commitBatch(collectionRef);
   }
 
-  async setInBatch(data: Write, documentId: string, parentDocumentIds: string[] = []): Promise<void> {
+  async setInBatch(data: Write, documentId: string | null, parentDocumentIds: string[] = []): Promise<void> {
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    this.batchHandler.set(collectionRef, documentId, await this.organizeWriteData(data));
+    this.batchHandler.set(await this.organizeWriteData(data), collectionRef, documentId);
   }
 
-  async updateInBatch(data: Partial<Write>, documentId: string, parentDocumentIds: string[] = []): Promise<void> {
+  updateInBatch(data: Partial<Write>, documentId: string, parentDocumentIds: string[] = []): void {
     const collectionRef = this.getCollectionRef(parentDocumentIds);
-    this.batchHandler.update(collectionRef, documentId, await this.organizePartialWriteData(data));
+    this.batchHandler.update(this.organizePartialWriteData(data), collectionRef, documentId);
   }
 
   deleteInBatch(documentId: string, parentDocumentIds: string[] = []): void {
@@ -306,9 +306,9 @@ abstract class FirestoreService<
     this.transactionHandler.set(collectionRef, documentId, await this.organizeWriteData(data));
   }
 
-  async updateInTransaction(data: Partial<Write>, documentId: string, parentDocumentIds: string[] = []): Promise<void> {
+  updateInTransaction(data: Partial<Write>, documentId: string, parentDocumentIds: string[] = []): void {
     const collectionRef = this.getCollectionRef(parentDocumentIds) as CollectionReference;
-    this.transactionHandler.update(collectionRef, documentId, await this.organizePartialWriteData(data));
+    this.transactionHandler.update(collectionRef, documentId, this.organizePartialWriteData(data));
   }
 
   deleteInTransaction(documentId: string, parentDocumentIds: string[] = []): void {

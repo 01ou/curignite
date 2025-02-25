@@ -26,7 +26,7 @@ const ProblemSetsMain: React.FC<ProblemSetsMainProps> = () => {
         {problemSets.map(problemSet => (
           <Grid item xs={4} sm={3} md={2} lg={1} key={problemSet.docId} sx={{ display: "flex", justifyContent: "center" }}>
             <ProblemSetContainer
-              label={problemSet.name}
+              label={problemSet.setName}
               intimacy={30}
               overlayHexColor={getSubjectSetting(problemSet.subject).color}
               backgroundSrc={getSubjectSetting(problemSet.subject).image}

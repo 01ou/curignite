@@ -7,12 +7,12 @@ export class ProblemSetHistoryService extends FirestoreService<ProblemSetHistory
     super(firestore, ["users", "problemSets", "histories"]);
   }
 
-  protected async formatWriteData(data: ProblemSetHistoryWrite): Promise<ProblemSetHistoryWrite> {
+  protected filterWriteData(data: ProblemSetHistoryWrite): ProblemSetHistoryWrite {
     const { categoryId, problemId, startTime, durationMs, shortQuestionStatus } = data;
     return { categoryId, problemId, startTime, durationMs, shortQuestionStatus };
   }
 
-  protected async formatPartialWriteData(data: Partial<ProblemSetHistoryWrite>): Promise<Partial<ProblemSetHistoryWrite>> {
+  protected filterPartialWriteData(data: Partial<ProblemSetHistoryWrite>): Partial<ProblemSetHistoryWrite> {
     const { categoryId, problemId, startTime, durationMs, shortQuestionStatus } = data;
     return { categoryId, problemId, startTime, durationMs, shortQuestionStatus };
   }

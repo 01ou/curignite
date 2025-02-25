@@ -17,18 +17,18 @@ const CreateProblemSet: React.FC<CreateProblemSetProps> = ({ open, onClose }) =>
 
   const { asyncStates, createProblemSet } = useCrudProblemSets();
   const { formState, names, createInputProps } = useFormState<ProblemSetWrite>({
-    name: "",
+    setName: "",
     subject: "notSelected",
     detailedSubject: null
   });
   
   return (
-    <Popup open={open} onClose={onClose} fixedCloseButton sx={{ height: "100%", bgcolor: "#AADDFF" }} >
+    <Popup open={open} onClose={onClose} sx={{ height: "100%", bgcolor: "#AADDFF" }} >
       <Box sx={{ padding: 2 }}>
         <Grid container spacing={2} direction="column">
           <Grid item>
             <TextField
-              {...createInputProps(names.name)}
+              {...createInputProps(names.setName)}
               fullWidth
               label="問題セット名"
               variant="outlined"

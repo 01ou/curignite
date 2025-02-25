@@ -7,12 +7,12 @@ export class ProblemSetCategoryService extends FirestoreService<ProblemSetCatego
     super(firestore, ["users", "problemSets", "categories"]);
   }
 
-  protected async formatWriteData(data: ProblemSetCategoryWrite): Promise<ProblemSetCategoryDocument> {
+  protected filterWriteData(data: ProblemSetCategoryWrite): ProblemSetCategoryDocument {
     const { categoryName, lastProblemNumber } = data;
     return { categoryName, lastProblemNumber, totalAttempts: 0, totalTimeSpent: 0 };
   }
 
-  protected async formatPartialWriteData(data: Partial<ProblemSetCategoryWrite>): Promise<Partial<ProblemSetCategoryWrite>> {
+  protected filterPartialWriteData(data: Partial<ProblemSetCategoryWrite>): Partial<ProblemSetCategoryWrite> {
     const { categoryName, lastProblemNumber } = data;
     return { categoryName, lastProblemNumber };
   }

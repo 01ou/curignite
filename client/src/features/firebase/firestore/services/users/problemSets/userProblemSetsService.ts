@@ -7,13 +7,13 @@ export class UserProblemSetService extends FirestoreService<ProblemSetRead, Prob
     super(firestore, ["users", "problemSets"]);
   }
 
-  protected async formatWriteData(data: ProblemSetWrite): Promise<ProblemSetDocument> {
-    const { name, subject, detailedSubject } = data;
-    return { name, subject, detailedSubject, recentAccess: {} }
+  protected filterWriteData(data: ProblemSetWrite): ProblemSetDocument {
+    const { setName, subject, detailedSubject } = data;
+    return { setName, subject, detailedSubject, recentAccess: {} }
   }
 
-  protected async formatPartialWriteData(data: Partial<ProblemSetWrite>): Promise<Partial<ProblemSetDocument>> {
-    const { name, subject } = data;
-    return { name, subject };
+  protected filterPartialWriteData(data: Partial<ProblemSetWrite>): Partial<ProblemSetDocument> {
+    const { setName, subject } = data;
+    return { setName, subject };
   }
 }
