@@ -21,6 +21,7 @@
     "date-fns": "^2.30.0",
     "firebase": "^11.3.1",
     "i18next": "^24.2.2",
+    "matter-js": "^0.20.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-i18next": "^15.4.1",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@types/matter-js": "^0.19.8",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",

@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ProblemSetRead } from '../../../types/firebase/firestore/structure/users/problemSets/problemSetStructure';
 import { Box, IconButton, Stack } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import ProblemSetDetailsHeader from './ProblemSetDetailsHeader';
 import useCurdProblemSetSubCollection from '../../../features/hooks/firestoreApi/problemSets/useCurdProblemSetSubCollection';
 import useProblemSetParameter from './useProblemSetParameter';

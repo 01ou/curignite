@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import BackgroundContainer from '../../../components/display/BackgroundContainer';
-import background from '../../../assets/space.png';
+import background from '../../../assets/backgrounds/space.png';
 import ProblemSetContainer from './ProblemSetContainer';
 import useCrudProblemSets from '../../../features/hooks/firestoreApi/problemSets/useCrudProblemSets';
 import { Grid } from '@mui/material';

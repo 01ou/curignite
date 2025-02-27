@@ -7,6 +7,7 @@ interface BackgroundContainerProps {
   fit?: "width" | "height"; // 追加: 画像のフィット方法を選択
   children: React.ReactNode;
   sx?: SxProps;
+  ref?: React.RefObject<HTMLDivElement | null>
 }
 
 const BackgroundContainer: React.FC<BackgroundContainerProps> = ({
@@ -14,11 +15,13 @@ const BackgroundContainer: React.FC<BackgroundContainerProps> = ({
   fit = "cover", // デフォルト: cover
   children,
   sx,
+  ref
 }) => {
   const backgroundSize = fit === "width" ? "100vw auto" : fit === "height" ? "auto 100vh" : "cover";
 
   return (
     <Box
+      ref={ref}
       sx={{
         position: "absolute",
         top: 0,

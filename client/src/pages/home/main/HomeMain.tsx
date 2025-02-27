@@ -2,7 +2,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import BackgroundContainer from "../../../components/display/BackgroundContainer";
-import background from "../../../assets/room.png"
+import background from "../../../assets/backgrounds/room.png"
 import { MenuBook, Task } from "@mui/icons-material";
 import FloatingButton from "../../../components/inputs/FloatingButton";
 import { getTextOutline } from "../../../functions/style/sxUtils";

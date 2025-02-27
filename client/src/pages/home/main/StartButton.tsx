@@ -1,10 +1,12 @@
 import { Box, Button, Typography } from '@mui/material';
 import React from 'react';
 import { getCenteredPosition, getTextOutline } from '../../../functions/style/sxUtils';
+import { useNavigate } from 'react-router-dom';
 
 interface StartButtonProps { }
 
 const StartButton: React.FC<StartButtonProps> = ({}) => {
+  const navigate = useNavigate();
 
   return (
     <Box sx={{
@@ -26,6 +28,7 @@ const StartButton: React.FC<StartButtonProps> = ({}) => {
             transform: "scale(1.1)",
           },
         }}
+        onClick={() => navigate("/learning")}
       >
         <Typography variant="h5" sx={{ whiteSpace: "nowrap", ...getTextOutline("#301C1C", 1), fontWeight: "bold", }}>はじめる</Typography>
       </Button>
