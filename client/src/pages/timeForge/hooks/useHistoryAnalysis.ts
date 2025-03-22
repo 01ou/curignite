@@ -1,7 +1,7 @@
 import { ActionData, ActionCategory } from "../types/actionTypes";
 import { isEqualDate } from "../../../functions/dateTimeUtils/dateTimeUtils";
 import { TimeTypes } from "../../../types/utils/dateTimeTypes";
-import { convertToDate, toISODate, toISODateTime } from "../../../functions/dateTimeUtils/timeConversion";
+import { convertToDate, convertToLocalTimeMs, toISODate } from "../../../functions/dateTimeUtils/timeConversion";
 
 const useHistoryAnalysis = () => {
   const getActionTime = (history: ActionData[], date: TimeTypes = new Date()) => {
@@ -59,13 +59,11 @@ const useHistoryAnalysis = () => {
     startDate?: TimeTypes,
     endDate?: TimeTypes
   ) => {
-    console.log("call");
-    
     return history.reduce((acc, data) => {
       if (data?.endTimestampMs) {
         const date = new Date(data.endTimestampMs);
-        const isoDate = toISODate(data.endTimestampMs);
-  
+        const isoDate = toISODate(convertToLocalTimeMs(date));
+
         // 指定された範囲内かチェック
         const isInRange =
           (!startDate || date >= convertToDate(startDate)) &&

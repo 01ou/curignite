@@ -1,6 +1,7 @@
 import { Timestamp } from "firebase/firestore";
 import { TimeTypes, ISODate, ISODateTime, TimeSizeUnit } from "../../types/utils/dateTimeTypes";
-import { TIME_UNIT_IN_MILLISECONDS } from "../../constants/dateTimeConstants";
+import { toZonedTime } from 'date-fns-tz';
+import { MINUTES_IN_MILLISECOND, TIME_UNIT_IN_MILLISECONDS } from "../../constants/dateTimeConstants";
 
 /**
  * ISO形式の日付文字列をDateオブジェクトに変換します。
@@ -47,6 +48,11 @@ export const convertToDate = (time: TimeTypes): Date => {
 
   throw new Error(`Unsupported time type: ${typeof time}`);
 };
+
+export const convertToLocalTimeMs = (dateTime: TimeTypes): number => {
+  const date = convertToDate(dateTime);
+  return date.getTime() - date.getTimezoneOffset() * MINUTES_IN_MILLISECOND;
+}
 
 /**
  * TimeTypes の入力をミリ秒に変換します。
