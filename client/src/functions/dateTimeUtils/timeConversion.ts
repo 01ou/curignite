@@ -1,6 +1,5 @@
 import { Timestamp } from "firebase/firestore";
 import { TimeTypes, ISODate, ISODateTime, TimeSizeUnit } from "../../types/utils/dateTimeTypes";
-import { toZonedTime } from 'date-fns-tz';
 import { MINUTES_IN_MILLISECOND, TIME_UNIT_IN_MILLISECONDS } from "../../constants/dateTimeConstants";
 
 /**

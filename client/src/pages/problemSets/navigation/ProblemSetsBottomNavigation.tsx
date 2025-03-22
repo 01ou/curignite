@@ -7,7 +7,7 @@ interface ProblemSetsBottomNavigationProps {
   onChange?: (event: React.SyntheticEvent, newValue: number) => void;
 }
 
-const ProblemSetsBottomNavigation: React.FC<ProblemSetsBottomNavigationProps> = ({ selectedIndex, onChange }) => {
+const ProblemSetsBottomNavigation: React.FC<ProblemSetsBottomNavigationProps> = () => {
   const [openCreatePopup, setOpenCreatePopup] = useState(false);
 
   return (

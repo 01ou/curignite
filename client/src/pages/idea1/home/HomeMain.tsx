@@ -2,7 +2,6 @@ import React from 'react';
 import BackgroundContainer from '../../../components/display/BackgroundContainer';
 import forestBG from "../../../assets/backgrounds/forest.jpg";
 import { Button, Grid, Stack, SvgIconTypeMap, Typography } from '@mui/material';
-import FloatingButton from '../../../components/inputs/FloatingButton';
 import { useNavigate } from 'react-router-dom';
 import { Diversity3, MenuBook, Stairs, Task } from '@mui/icons-material';
 import { getTextOutline } from '../../../functions/style/sxUtils';

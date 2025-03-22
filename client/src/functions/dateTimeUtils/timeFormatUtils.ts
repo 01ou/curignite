@@ -1,7 +1,7 @@
 import { differenceInDays } from "date-fns";
 import { TimeTypes, TimeSizeUnit } from "../../types/utils/dateTimeTypes";
 import { getMidnightDate } from "./dateTimeUtils";
-import { MINUTES_IN_MILLISECOND, TIME_UNIT_IN_MILLISECONDS } from "../../constants/dateTimeConstants";
+import { MINUTES_IN_MILLISECOND } from "../../constants/dateTimeConstants";
 import { DurationFormatOptions } from "./types/dateTimeOptions";
 import { convertToMilliseconds, getMsPerUnit } from "./timeConversion";
 

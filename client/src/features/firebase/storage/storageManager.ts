@@ -1,6 +1,6 @@
 import { FirebaseStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-import { storage } from "../../../firebase/firebase";
 import { FileExtension } from "../../../types/utils/fileTypes";
+import { storage } from "../firebase";
 
 export class StorageManager {
   constructor(private storage: FirebaseStorage) { }
