@@ -1,11 +1,4 @@
-import { ActionCategory } from "../types/actionTypes";
-
-type ActionData = {
-  actionId: string;
-  category: ActionCategory;
-  startTimestampMs: number;
-  endTimestampMs?: number;
-};
+import { ActionCategory, ActionData } from "../types/actionTypes";
 
 const STORAGE_KEYS = {
   ACTIVE: "activeAction",

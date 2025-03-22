@@ -3,6 +3,7 @@ import { TimeTypes, TimeSizeUnit } from "../../types/utils/dateTimeTypes";
 import { getMidnightDate } from "./dateTimeUtils";
 import { MINUTES_IN_MILLISECOND, TIME_UNIT_IN_MILLISECONDS } from "../../constants/dateTimeConstants";
 import { DurationFormatOptions } from "./types/dateTimeOptions";
+import { convertToMilliseconds, getMsPerUnit } from "./timeConversion";
 
 /**
  * ミリ秒を分解して、時間、分、秒、ミリ秒を返す
@@ -128,28 +129,7 @@ export const formatDayDifference = (
   return formatStr.replace(/d/g, String(Math.abs(daysDifference)));
 };
 
-/**
- * ミリ秒を指定した時間単位に変換する関数（切り上げ）  
- * 例：ミリ秒を「minutes」単位に変換する場合、ms / TIME_UNIT_IN_MILLISECONDS["minutes"] を切り上げた値を返す。
- *
- * @param ms - ミリ秒
- * @param unit - 変換先の単位（デフォルトは "minutes"）
- * @returns 指定した単位に変換された数値
- */
-export const convertMsToUnit = (ms: number, unit: TimeSizeUnit = "minutes", decimalPlaces: number | null = 0): number => {
-  const unitInMs = TIME_UNIT_IN_MILLISECONDS[unit];
-  if (decimalPlaces === null) {
-    return ms / unitInMs;
-  }
-  return parseFloat((ms / unitInMs).toFixed(decimalPlaces));
-};
-
-/**
- * 指定した時間単位に相当するミリ秒を返す関数
- *
- * @param unit - 時間単位
- * @returns 単位に相当するミリ秒
- */
-export const getMsPerUnit = (unit: TimeSizeUnit): number => {
-  return TIME_UNIT_IN_MILLISECONDS[unit];
-};
+export const shiftDateTime = (base: TimeTypes, shift: number, unit: TimeSizeUnit): number => {
+  const ms = convertToMilliseconds(base) + getMsPerUnit(unit) * shift;
+  return ms;
+}

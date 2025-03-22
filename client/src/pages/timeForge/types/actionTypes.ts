@@ -1,5 +1,12 @@
 export type ActionCategory = "training" | "rest" | "creative" | "sleep";
 
+export type ActionData = {
+  actionId: string;
+  category: ActionCategory;
+  startTimestampMs: number;
+  endTimestampMs?: number;
+};
+
 export const actionCategoryColorMap: Record<ActionCategory, string> = {
   training: "#E23B3B",
   rest: "#4BE02A",

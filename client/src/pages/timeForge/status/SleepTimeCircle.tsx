@@ -3,7 +3,7 @@ import { Box, SxProps, Typography } from '@mui/material';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
 import { HOURS_IN_MILLISECOND } from '../../../constants/dateTimeConstants';
-import { convertMsToUnit } from '../../../functions/dateTimeUtils/timeFormatUtils';
+import { convertMsToUnit } from '../../../functions/dateTimeUtils/timeConversion';
 
 interface SleepTimeCircleProps {
   sleepTimeMs: number;  

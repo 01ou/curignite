@@ -1,8 +1,9 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartOptions } from 'chart.js';
-import { convertMsToUnit, decomposeMilliseconds } from '../../../functions/dateTimeUtils/timeFormatUtils';
+import { decomposeMilliseconds } from '../../../../functions/dateTimeUtils/timeFormatUtils';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { convertMsToUnit } from '../../../../functions/dateTimeUtils/timeConversion';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
@@ -40,7 +41,15 @@ const TodayResultChart: React.FC<TodayResultChartProps> = ({ trainingTimeMs, res
 
   const options: ChartOptions<'bar'> = {
     responsive: true,
+    layout: {
+      padding: {
+        top: 20
+      }
+    },
     plugins: {
+      legend: {
+        display: false,
+      },
       tooltip: {
         callbacks: {
           label: (tooltipItem) => {

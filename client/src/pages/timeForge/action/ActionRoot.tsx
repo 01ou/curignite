@@ -1,5 +1,5 @@
 import React from 'react';
-import useActionStorage from '../category/useActionStorage';
+import useActionStorage from '../hooks/useActionStorage';
 import { Button, Stack, Typography } from '@mui/material';
 import { actionCategoryBgColorMap, actionCategoryColorMap } from '../types/actionTypes';
 import { useNavigate } from 'react-router-dom';

@@ -2,7 +2,7 @@ import React from 'react';
 import ActionList from './ActionList';
 import { actionIconMap, creativeIds, restIds, trainingIds } from './actionItems';
 import { ActionCategory, actionCategoryBgColorMap, actionCategoryColorMap } from '../types/actionTypes';
-import useActionStorage from './useActionStorage';
+import useActionStorage from '../hooks/useActionStorage';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import SleepTypeSelector from './sleep/SleepTypeSelector';

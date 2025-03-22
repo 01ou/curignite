@@ -28,7 +28,7 @@ const App: React.FC = () => {
       <Route path="/idea1/home" element={<HomeMain />} />
       <Route path="/idea1/learning" element={<LearningMain />} />
 
-      <Route path='/time-forge' element={<TimeForgeHomeRoot />} />
+      <Route path='/time-forge/*' element={<TimeForgeHomeRoot />} />
       <Route path='/time-forge/action' element={<ActionRoot />} />
 
       <Route path='auth' element={<AuthRoot />} />
