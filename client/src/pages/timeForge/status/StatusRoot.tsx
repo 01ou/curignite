@@ -9,7 +9,7 @@ import { DAYS_IN_MILLISECOND } from '../../../constants/dateTimeConstants';
 interface StatusRootProps { }
 
 const StatusRoot: React.FC<StatusRootProps> = ({}) => {
-  const [displayType, setDisplayType] = useState<"date" | "recent">("recent");
+  const [displayType, setDisplayType] = useState<"date" | "recent">("date");
   const [displayDateMs, setDisplayDateMs] = useState(new Date().getTime());
   
   const { getHistory } = useActionStorage();

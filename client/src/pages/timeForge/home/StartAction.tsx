@@ -59,7 +59,7 @@ const StartAction: React.FC<StartActionProps> = () => {
   const timeData = getActionTime(getHistory());
 
   return (
-    <Stack direction="column" alignItems="center" justifyContent="center" spacing={0} >
+    <Stack direction="column" alignItems="center" justifyContent="center" spacing={0} pb={20} overflow="auto" >
       <TodayOverview {...timeData} />
       <Stack direction="column" alignItems="center" justifyContent="center" mt={2} >
         <Typography variant='h6' >
