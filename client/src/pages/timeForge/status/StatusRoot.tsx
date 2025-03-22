@@ -1,28 +1,37 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import useActionStorage from '../hooks/useActionStorage';
-import useHistoryAnalysis from '../hooks/useHistoryAnalysis';
-import TodayOverview from './TodayOverview';
-import ActionBreakdown from './ActionBreakdown';
 import { Box } from '@mui/material';
-import ChangeDateButtons from './charts/ChangeDateButtons';
+import ChangeDateButtons from './ChangeDateButtons';
+import DayStatus from './DayStatus';
+import RecentStatus from './RecentStatus';
+import { DAYS_IN_MILLISECOND } from '../../../constants/dateTimeConstants';
 
 interface StatusRootProps { }
 
 const StatusRoot: React.FC<StatusRootProps> = ({}) => {
+  const [displayType, setDisplayType] = useState<"date" | "recent">("recent");
   const [displayDateMs, setDisplayDateMs] = useState(new Date().getTime());
   
   const { getHistory } = useActionStorage();
-  const { getActionTime, getActionBreakdown } = useHistoryAnalysis();
+  
 
   const history = getHistory();
-  const timeData = useMemo(() => getActionTime(history, displayDateMs), [history, getActionTime]);
-  const breakdown = getActionBreakdown(history, undefined, displayDateMs);
-  
+
   return (
     <Box sx={{ overflowY: "auto", pb: 10 }}>
-      <ChangeDateButtons displayDateMs={displayDateMs} onChangeDateMs={setDisplayDateMs} />
-      <TodayOverview {...timeData} />
-      <ActionBreakdown actions={breakdown} />
+      <ChangeDateButtons
+      displayDateMs={displayDateMs}
+      type={displayType}
+      onChangeDateMs={setDisplayDateMs}
+      onChangeType={setDisplayType}
+    />
+    {displayType === "date" ? (
+      <>
+        <DayStatus history={history} displayDateMs={displayDateMs} />
+      </>
+    ) : (
+      <RecentStatus history={history} startDateMs={displayDateMs - 7 * DAYS_IN_MILLISECOND} endDateMs={displayDateMs} />
+    )} 
     </Box>
   );
 };

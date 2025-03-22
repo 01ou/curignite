@@ -1,9 +1,9 @@
 import { ActionData, ActionCategory } from "../types/actionTypes";
 import { isEqualDate } from "../../../functions/dateTimeUtils/dateTimeUtils";
 import { TimeTypes } from "../../../types/utils/dateTimeTypes";
+import { convertToDate, toISODate, toISODateTime } from "../../../functions/dateTimeUtils/timeConversion";
 
 const useHistoryAnalysis = () => {
-
   const getActionTime = (history: ActionData[], date: TimeTypes = new Date()) => {
     return history.reduce(
       (acc, data) => {
@@ -54,7 +54,51 @@ const useHistoryAnalysis = () => {
     }, {} as Record<string, { category: ActionCategory; time: number }>);
   };
 
-  return { getActionTime, getActionBreakdown };
+  const getActionTimeByDate = (
+    history: ActionData[],
+    startDate?: TimeTypes,
+    endDate?: TimeTypes
+  ) => {
+    console.log("call");
+    
+    return history.reduce((acc, data) => {
+      if (data?.endTimestampMs) {
+        const date = new Date(data.endTimestampMs);
+        const isoDate = toISODate(data.endTimestampMs);
+  
+        // 指定された範囲内かチェック
+        const isInRange =
+          (!startDate || date >= convertToDate(startDate)) &&
+          (!endDate || date <= convertToDate(endDate));
+  
+        if (!isInRange) return acc;
+  
+        const duration = data.endTimestampMs - data.startTimestampMs;
+  
+        if (!acc[isoDate]) {
+          acc[isoDate] = { trainingTimeMs: 0, restTimeMs: 0, creativeTimeMs: 0, sleepTimeMs: 0 };
+        }
+  
+        switch (data.category) {
+          case "training":
+            acc[isoDate].trainingTimeMs += duration;
+            break;
+          case "rest":
+            acc[isoDate].restTimeMs += duration;
+            break;
+          case "creative":
+            acc[isoDate].creativeTimeMs += duration;
+            break;
+          case "sleep":
+            acc[isoDate].sleepTimeMs += duration;
+            break;
+        }
+      }
+      return acc;
+    }, {} as Record<string, { trainingTimeMs: number; restTimeMs: number; creativeTimeMs: number; sleepTimeMs: number }>);
+  };  
+
+  return { getActionTime, getActionBreakdown, getActionTimeByDate };
 };
 
 export default useHistoryAnalysis

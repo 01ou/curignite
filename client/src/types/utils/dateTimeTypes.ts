@@ -1,11 +1,12 @@
 import { Timestamp } from "firebase/firestore";
 
 type OneToNine = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9";
-type ZeroToNine = "0" | OneToNine;
+export type DecimalDight = "0" | OneToNine;
+export type HexDigit = DecimalDight | "A" | "B" | "C" | "D" | "E" | "F" | "a" | "b" | "c" | "d" | "e" | "f";
 
-export type Month = `0${OneToNine}` | "10" | "11" | "12";
-export type Days = `0${OneToNine}` | `1${ZeroToNine}` | `2${ZeroToNine}` | "30" | "31";
-export type Hours24 = `0${ZeroToNine}` | `1${ZeroToNine}` | "20" | "21" | "22" | "23";
+export type Month = `0${DecimalDight}` | "10" | "11" | "12";
+export type Days = `0${DecimalDight}` | `1${DecimalDight}` | `2${DecimalDight}` | "30" | "31";
+export type Hours24 = `0${DecimalDight}` | `1${DecimalDight}` | "20" | "21" | "22" | "23";
 export type ISODate = `${string}-${Month}-${Days}`;
 export type ISODateTime = `${ISODate}T${string}Z`;
 
