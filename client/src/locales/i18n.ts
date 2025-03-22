@@ -9,6 +9,8 @@ import subjectsJa from "./subjects/subjectsJa.json";
 import dialogueEn from "./auth/dialogueEn.json"
 import subjectsEn from "./subjects/subjectsEn.json";
 
+import actionJa from "./action/actionJa.json";
+
 // 翻訳リソースをまとめる
 const resources = {
   en: {
@@ -21,7 +23,8 @@ const resources = {
     translation: {
       ...dialogueJa,
       ...authErrorJa,
-      ...subjectsJa
+      ...subjectsJa,
+      ...actionJa
     }
   },
 };

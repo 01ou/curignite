@@ -136,9 +136,12 @@ export const formatDayDifference = (
  * @param unit - 変換先の単位（デフォルトは "minutes"）
  * @returns 指定した単位に変換された数値
  */
-export const convertMsToUnit = (ms: number, unit: TimeSizeUnit = "minutes"): number => {
+export const convertMsToUnit = (ms: number, unit: TimeSizeUnit = "minutes", decimalPlaces: number | null = 0): number => {
   const unitInMs = TIME_UNIT_IN_MILLISECONDS[unit];
-  return Math.ceil(ms / unitInMs);
+  if (decimalPlaces === null) {
+    return ms / unitInMs;
+  }
+  return parseFloat((ms / unitInMs).toFixed(decimalPlaces));
 };
 
 /**
