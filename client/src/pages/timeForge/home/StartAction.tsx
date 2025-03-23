@@ -4,10 +4,8 @@ import Popup from '../../../components/utils/Popup';
 import ActionManager from '../category/ActionManager';
 import HomeBottomNavigation from '../navigation/bottomNavigation/HomeBottomNavigation';
 import SelectCategoryButton from './SelectCategoryButton';
-import useActionStorage from '../hooks/useActionStorage';
 import { ActionCategory } from '../types/actionTypes';
 import { LocalFireDepartment, Forest, Landscape, Bedtime } from '@mui/icons-material';
-import useHistoryAnalysis from '../hooks/useHistoryAnalysis';
 import TodayOverview from '../status/TodayOverview';
 
 interface StartActionProps { }
@@ -52,15 +50,11 @@ const categories: Category[] = [
 ];
 
 const StartAction: React.FC<StartActionProps> = () => {
-  const { getHistory } = useActionStorage();
-  const { getActionTime } = useHistoryAnalysis();
   const [currentActionCategory, setCurrentActionCategory] = useState<ActionCategory | null>(null);
-
-  const timeData = getActionTime(getHistory());
 
   return (
     <Stack direction="column" alignItems="center" justifyContent="center" spacing={0} pb={20} overflow="auto" >
-      <TodayOverview {...timeData} />
+      <TodayOverview />
       <Stack direction="column" alignItems="center" justifyContent="center" mt={2} >
         <Typography variant='h6' >
           分類

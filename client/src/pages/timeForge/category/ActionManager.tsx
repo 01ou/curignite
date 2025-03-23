@@ -14,9 +14,12 @@ interface ActionManagerProps {
 const ActionManager: React.FC<ActionManagerProps> = ({ actionCategory }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { startAction } = useActionStorage();
+  const { startAction, updateContinuousTrainingCount } = useActionStorage();
 
   const handleStartAction = (actionId: string) => {
+    if (actionCategory === "training") {
+      updateContinuousTrainingCount();
+    }
     startAction(actionId, actionCategory);
     navigate("/time-forge/action");
   }

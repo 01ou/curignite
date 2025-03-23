@@ -53,6 +53,10 @@ export const convertToLocalTimeMs = (dateTime: TimeTypes): number => {
   return date.getTime() - date.getTimezoneOffset() * MINUTES_IN_MILLISECOND;
 }
 
+export const getLocalDate = (baseDate: TimeTypes = new Date()) => {
+  return new Date(convertToLocalTimeMs(baseDate));
+}
+
 /**
  * TimeTypes の入力をミリ秒に変換します。
  * @param time - 数値、Date、Timestamp、またはISO形式の文字列

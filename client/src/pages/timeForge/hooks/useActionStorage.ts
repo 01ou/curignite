@@ -1,8 +1,13 @@
+import { isToday } from "date-fns";
+import { getMidnightDate } from "../../../functions/dateTimeUtils/dateTimeUtils";
+import { shiftDateTime } from "../../../functions/dateTimeUtils/timeFormatUtils";
 import { ActionCategory, ActionData } from "../types/actionTypes";
 
 const STORAGE_KEYS = {
   ACTIVE: "activeAction",
   HISTORY: "actionHistory",
+  LAST_TRAINING: "lastTraining",
+  CONTINUOUS_TRAINING_COUNT: "continuousTrainingCount"
 };
 
 const useActionStorage = () => {
@@ -49,6 +54,50 @@ const useActionStorage = () => {
     return getFromStorage<ActionData[]>(STORAGE_KEYS.HISTORY) || [];
   };
 
+  const updateContinuousTrainingCount = () => {
+    const lastTrainingMs = getFromStorage<number>(STORAGE_KEYS.LAST_TRAINING);
+    const now = new Date().getTime();
+    
+    if (!lastTrainingMs) {
+      resetTrainingCount(now);
+      return;
+    }
+  
+    const twoDaysAgoMidnight = shiftDateTime(getMidnightDate(), -2, "days");
+  
+    if (lastTrainingMs > twoDaysAgoMidnight) {
+      if (!isToday(lastTrainingMs)) {
+        incrementTrainingCount();
+      }
+    } else {
+      resetTrainingCount(now);
+    }
+  
+    saveToStorage(STORAGE_KEYS.LAST_TRAINING, now);
+  };
+  
+  const getContinuousTrainingCount = (): number => {
+    updateContinuousTrainingCount();
+    return getFromStorage<number>(STORAGE_KEYS.CONTINUOUS_TRAINING_COUNT) ?? 0;
+  };
+  
+  // 連続トレーニング回数をリセット
+  const resetTrainingCount = (timestamp: number) => {
+    saveToStorage(STORAGE_KEYS.CONTINUOUS_TRAINING_COUNT, 1);
+    saveToStorage(STORAGE_KEYS.LAST_TRAINING, timestamp);
+  };
+  
+  // 連続トレーニング回数を増やす
+  const incrementTrainingCount = () => {
+    const count = getFromStorage<number>(STORAGE_KEYS.CONTINUOUS_TRAINING_COUNT) ?? 0;
+    saveToStorage(STORAGE_KEYS.CONTINUOUS_TRAINING_COUNT, count + 1);
+  };
+
+  const doneTrainingToday = (): boolean => {
+    const lastTrainingMs = getFromStorage<number>(STORAGE_KEYS.LAST_TRAINING);
+    return !!lastTrainingMs && isToday(lastTrainingMs);
+  }
+
   // 汎用ローカルストレージの読み取り
   const getFromStorage = <T>(key: string): T | null => {
     const dataString = localStorage.getItem(key);
@@ -65,7 +114,16 @@ const useActionStorage = () => {
     localStorage.removeItem(key);
   };
 
-  return { startAction, getCurrentAction, cancelCurrentAction, endCurrentAction, getHistory };
+  return {
+    startAction,
+    getCurrentAction,
+    cancelCurrentAction,
+    endCurrentAction,
+    getHistory,
+    updateContinuousTrainingCount,
+    getContinuousTrainingCount,
+    doneTrainingToday
+  };
 };
 
 export default useActionStorage;
