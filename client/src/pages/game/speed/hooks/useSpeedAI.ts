@@ -4,7 +4,7 @@ import { isPlayable } from "./useSpeedGame";
 const useSpeedAI = () => {
   const choiceCard = (
     hands: TrumpCard[],
-    playerHands: TrumpCard[],
+    _: TrumpCard[], // playerHands
     tableCards: TrumpCard[]
   ): { playCardIndex: number; targetTableIndex: number } => {
     // 手札の各カードについて、テーブル上のカードとの組み合わせを探索
@@ -16,9 +16,6 @@ const useSpeedAI = () => {
         }
       }
     }
-
-    // TODO: プレイヤーの手をAIの判断に使う
-    playerHands = []
 
     // もしどのカードもプレイできなければ、-1を返す
     return { playCardIndex: -1, targetTableIndex: -1 };
