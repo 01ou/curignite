@@ -17,6 +17,7 @@ import LongPressComponent from './pages/idea1/top/TopMain';
 import HomeMain from './pages/idea1/home/HomeMain';
 import LearningMain from './pages/idea1/learning/LearningMain';
 import ActionRoot from './pages/timeForge/action/ActionRoot';
+import SpeedRoot from './pages/game/speed/SpeedRoot';
 
 const App: React.FC = () => {
   useInitializationApp();
@@ -30,6 +31,8 @@ const App: React.FC = () => {
 
       <Route path='/time-forge/*' element={<TimeForgeHomeRoot />} />
       <Route path='/time-forge/action' element={<ActionRoot />} />
+
+      <Route path='/game/speed' element={<SpeedRoot />} />
 
       <Route path='auth' element={<AuthRoot />} />
       <Route path='auth/:step' element={<AuthRoot />} />
