@@ -9,6 +9,8 @@ import LearningRoot from './pages/learning/LearningRoot';
 
 import TimeForgeHomeRoot from './pages/timeForge/home/HomeRoot';
 
+import UnitHomeRoot from './pages/unit/home/HomeRoot';
+
 import "@fontsource/roboto-mono"; // 通常のフォント
 import "@fontsource/press-start-2p"; // 8bit風
 import "@fontsource/vt323"; // レトロPC風
@@ -18,6 +20,7 @@ import HomeMain from './pages/idea1/home/HomeMain';
 import LearningMain from './pages/idea1/learning/LearningMain';
 import ActionRoot from './pages/timeForge/action/ActionRoot';
 import SpeedRoot from './pages/game/speed/SpeedRoot';
+import ActionPage from './pages/unit/lifeRecord/ActionPage';
 
 const App: React.FC = () => {
   useInitializationApp();
@@ -31,6 +34,9 @@ const App: React.FC = () => {
 
       <Route path='/time-forge/*' element={<TimeForgeHomeRoot />} />
       <Route path='/time-forge/action' element={<ActionRoot />} />
+
+      <Route path='/unit/*' element={<UnitHomeRoot />} />
+      <Route path='/unit/action' element={<ActionPage />} />
 
       <Route path='/game/speed' element={<SpeedRoot />} />
 
