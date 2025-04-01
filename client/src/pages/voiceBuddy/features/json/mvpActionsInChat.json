@@ -1,0 +1,20 @@
+{
+  "firstLogin": [
+    { "id": "startingEffort", "text": "いいね。早速勉強しよう！" }
+  ],
+  "loggingIn": [
+    { "id": "", "text": "" }
+  ],
+  "countingAccess": [
+    { "id": "startingEffort", "text": "いいね。早速勉強しよう！" }
+  ],
+  "startingEffort": [
+    { "id": "", "text": "" }
+  ],
+  "finishingEffort": [
+    { "id": "", "text": "" }
+  ],
+  "reportingEffortTime": [
+    { "id": "startingEffort", "text": "いいね。早速勉強しよう！" }
+  ]
+}

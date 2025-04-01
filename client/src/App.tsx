@@ -21,6 +21,7 @@ import LearningMain from './pages/idea1/learning/LearningMain';
 import ActionRoot from './pages/timeForge/action/ActionRoot';
 import SpeedRoot from './pages/game/speed/SpeedRoot';
 import ActionPage from './pages/unit/lifeRecord/ActionPage';
+import VoiceBuddyRoot from './pages/voiceBuddy/home/VoiceBuddyRoot';
 
 const App: React.FC = () => {
   useInitializationApp();
@@ -39,6 +40,8 @@ const App: React.FC = () => {
       <Route path='/unit/action' element={<ActionPage />} />
 
       <Route path='/game/speed' element={<SpeedRoot />} />
+
+      <Route path='/voice-buddy/*' element={<VoiceBuddyRoot />} />
 
       <Route path='auth' element={<AuthRoot />} />
       <Route path='auth/:step' element={<AuthRoot />} />

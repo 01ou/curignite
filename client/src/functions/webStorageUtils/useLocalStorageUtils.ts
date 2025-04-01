@@ -21,7 +21,7 @@ export const incrementNumberStorage = (key: string, step: number = 1) => {
   }
 }
 
-export const pushToArrayStorage = (key: string, item: unknown) => {
+export const pushToArrayStorage = <T>(key: string, item: T) => {
   const value = getFromStorage(key) ?? [];
   if (Array.isArray(value)) {
     saveToStorage(key, [...value, item]);

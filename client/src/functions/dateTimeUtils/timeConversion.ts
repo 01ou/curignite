@@ -29,8 +29,7 @@ const parseISODateTime = (isoDateTime: ISODateTime): Date | null => {
  * @throws 無効な入力の場合はエラーをスローします
  */
 export const convertToDate = (time: TimeTypes): Date => {
-  if (typeof time === "number") return new Date(time);
-  if (time instanceof Date) return time;
+  if (typeof time === "number" || time instanceof Date) return new Date(time);
   if (time instanceof Timestamp) return time.toDate();
 
   if (typeof time === "string") {

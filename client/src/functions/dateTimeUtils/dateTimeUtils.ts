@@ -48,3 +48,52 @@ export const getMidnightDate = (date: TimeTypes = new Date()): Date => {
     const midnight = startOfDay(convertToDate(date));
     return midnight;
 }
+
+/**
+ * Set the hour of a Date object to the specified hour (0-24).
+ * @param date - The original Date object.
+ * @param hour - The hour to set (0-24).
+ * @returns A new Date object with the updated hour.
+ */
+export const setHourToDate = (dateTime: TimeTypes, hour: number): Date => {
+    if (hour < 0 || hour > 24) {
+      throw new RangeError("Hour must be between 0 and 24.");
+    }
+  
+    const updatedDate = convertToDate(dateTime);
+  
+    // Set the specified hour
+    updatedDate.setHours(hour, 0, 0, 0);
+  
+    return updatedDate;
+  };
+
+  /**
+ * Calculate the difference in days between two dates.
+ * @param date1 - The first date.
+ * @param date2 - The second date.
+ * @param updateHour - Optional hour when the date should update (default: 0).
+ * @returns Number of days between date1 and date2.
+ */
+export const getDateDifference = (
+    date1: TimeTypes,
+    date2: TimeTypes,
+    updateHour: number = 0
+  ): number => {
+    // Convert inputs to Date objects
+    const d1 = convertToDate(date1);
+    const d2 = convertToDate(date2);
+  
+    if (updateHour < 0 || updateHour > 24) {
+      throw new RangeError("updateHour must be between 0 and 24.");
+    }
+  
+    // Adjust date based on updateHour
+    d1.setHours(d1.getHours() < updateHour ? -1 : 0, 0, 0, 0);
+    d2.setHours(d2.getHours() < updateHour ? -1 : 0, 0, 0, 0);
+  
+    // Calculate difference in milliseconds and convert to days
+    const diffTime = d2.getTime() - d1.getTime();
+    return Math.round(diffTime / (1000 * 60 * 60 * 24));
+  };
+  
