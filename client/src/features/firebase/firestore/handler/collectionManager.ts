@@ -1,8 +1,14 @@
-import { Firestore, CollectionReference, collection, DocumentData } from "firebase/firestore";
+import {
+  Firestore,
+  CollectionReference,
+  collection,
+  DocumentData,
+} from 'firebase/firestore'
 
 class CollectionManager {
   // キャッシュした CollectionReference を管理する
-  private cachedCollections: Record<string, CollectionReference<DocumentData>> = {};
+  private cachedCollections: Record<string, CollectionReference<DocumentData>> =
+    {}
 
   constructor(private firestore: Firestore) {}
 
@@ -10,14 +16,16 @@ class CollectionManager {
    * 文字列または文字列配列を必ず文字列配列に変換する
    */
   private normalizeToArray(input: string | string[]): string[] {
-    return Array.isArray(input) ? input : [input];
+    return Array.isArray(input) ? input : [input]
   }
 
   /**
    * キャッシュに存在すれば返し、なければ新たに作成してキャッシュする
    */
-  private getOrCreateCollection(path: string): CollectionReference<DocumentData> {
-    return this.cachedCollections[path] ??= collection(this.firestore, path);
+  private getOrCreateCollection(
+    path: string
+  ): CollectionReference<DocumentData> {
+    return (this.cachedCollections[path] ??= collection(this.firestore, path))
   }
 
   /**
@@ -27,10 +35,16 @@ class CollectionManager {
    * @param documentIds - ドキュメントIDの配列（コレクション間に挟む）
    *                     例: ["userId"] なら "users/userId/posts" のように合成
    */
-  public getCollectionRef(collectionPath: string | string[], documentIds: string[] = []): CollectionReference<DocumentData> {
-    const collections = this.normalizeToArray(collectionPath);
-    const composedPath = CollectionManager.composeCollectionPath(collections, documentIds);
-    return this.getOrCreateCollection(composedPath);
+  public getCollectionRef(
+    collectionPath: string | string[],
+    documentIds: string[] = []
+  ): CollectionReference<DocumentData> {
+    const collections = this.normalizeToArray(collectionPath)
+    const composedPath = CollectionManager.composeCollectionPath(
+      collections,
+      documentIds
+    )
+    return this.getOrCreateCollection(composedPath)
   }
 
   /**
@@ -44,22 +58,25 @@ class CollectionManager {
    *
    * @throws ドキュメントIDの数がコレクション名の数-1と一致しない場合
    */
-  public static composeCollectionPath(collectionNames: string[], documentIds: string[]): string {
+  public static composeCollectionPath(
+    collectionNames: string[],
+    documentIds: string[]
+  ): string {
     if (documentIds.length !== collectionNames.length - 1) {
       throw new Error(
         `The number of provided document IDs (${documentIds.length}) does not match the expected number (${collectionNames.length - 1}).`
-      );
+      )
     }
 
-    const pathParts: string[] = [];
+    const pathParts: string[] = []
     collectionNames.forEach((collectionName, index) => {
       if (index > 0) {
-        pathParts.push(documentIds[index - 1]);
+        pathParts.push(documentIds[index - 1])
       }
-      pathParts.push(collectionName);
-    });
-    return pathParts.join('/');
+      pathParts.push(collectionName)
+    })
+    return pathParts.join('/')
   }
 }
 
-export default CollectionManager;
+export default CollectionManager

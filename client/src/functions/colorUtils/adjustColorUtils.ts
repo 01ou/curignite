@@ -1,5 +1,5 @@
-import { ColorFormat, Hex, RGBA } from "../../types/utils/colorTypes";
-import { getRgbElements, rgbElementsToHex } from "./colorConversionUtils";
+import { ColorFormat, Hex, RGBA } from '../../types/utils/colorTypes'
+import { getRgbElements, rgbElementsToHex } from './colorConversionUtils'
 
 /**
  * 透明度を調整します。
@@ -8,8 +8,8 @@ import { getRgbElements, rgbElementsToHex } from "./colorConversionUtils";
  * @returns "rgba(r, g, b, a)" 形式
  */
 export function setAlpha(color: ColorFormat, alpha: number): RGBA {
-  const { r, g, b } = getRgbElements(color);
-  return `rgba(${r}, ${g}, ${b}, ${Math.min(1, Math.max(0, alpha))})`;
+  const { r, g, b } = getRgbElements(color)
+  return `rgba(${r}, ${g}, ${b}, ${Math.min(1, Math.max(0, alpha))})`
 }
 
 /**
@@ -19,12 +19,12 @@ export function setAlpha(color: ColorFormat, alpha: number): RGBA {
  * @returns 調整後のHex文字列
  */
 export function adjustBrightness(color: ColorFormat, factor: number): Hex {
-  let { r, g, b } = getRgbElements(color);
+  let { r, g, b } = getRgbElements(color)
 
   // 明度を調整（範囲制限）
-  r = Math.min(255, Math.max(0, Math.round(r * factor)));
-  g = Math.min(255, Math.max(0, Math.round(g * factor)));
-  b = Math.min(255, Math.max(0, Math.round(b * factor)));
+  r = Math.min(255, Math.max(0, Math.round(r * factor)))
+  g = Math.min(255, Math.max(0, Math.round(g * factor)))
+  b = Math.min(255, Math.max(0, Math.round(b * factor)))
 
-  return rgbElementsToHex(r, g, b);
+  return rgbElementsToHex(r, g, b)
 }

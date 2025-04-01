@@ -1,5 +1,5 @@
 /**
- * オブジェクトの配列を、指定したキーに基づいてソートします。  
+ * オブジェクトの配列を、指定したキーに基づいてソートします。
  * ソート対象のキーの値が null/undefined または期待する型でない場合の扱いを nullsLast オプションで制御できます。
  *
  * @template T - オブジェクトの型（Record<string, any> など）
@@ -15,26 +15,26 @@ export const sortObjectArray = <T extends Record<string, any>>(
   key: keyof T,
   ascending: boolean = true,
   nullsLast: boolean = true,
-  expectedType: "string" | "number" | "boolean" | null = null
+  expectedType: 'string' | 'number' | 'boolean' | null = null
 ): T[] => {
-  if (arr.length === 0) return arr;
+  if (arr.length === 0) return arr
 
-  const realExpectedType = expectedType ?? typeof arr[0][key];
-  const orderFactor = ascending ? 1 : -1;
+  const realExpectedType = expectedType ?? typeof arr[0][key]
+  const orderFactor = ascending ? 1 : -1
 
   return [...arr].sort((a, b) => {
-    const valueA = a[key];
-    const valueB = b[key];
+    const valueA = a[key]
+    const valueB = b[key]
 
-    const isInvalidA = valueA == null || typeof valueA !== realExpectedType;
-    const isInvalidB = valueB == null || typeof valueB !== realExpectedType;
+    const isInvalidA = valueA == null || typeof valueA !== realExpectedType
+    const isInvalidB = valueB == null || typeof valueB !== realExpectedType
 
-    if (isInvalidA && isInvalidB) return 0;
-    if (isInvalidA) return nullsLast ? 1 : -1;
-    if (isInvalidB) return nullsLast ? -1 : 1;
+    if (isInvalidA && isInvalidB) return 0
+    if (isInvalidA) return nullsLast ? 1 : -1
+    if (isInvalidB) return nullsLast ? -1 : 1
 
-    if (valueA > valueB) return orderFactor;
-    if (valueA < valueB) return -orderFactor;
-    return 0;
-  });
-};
+    if (valueA > valueB) return orderFactor
+    if (valueA < valueB) return -orderFactor
+    return 0
+  })
+}

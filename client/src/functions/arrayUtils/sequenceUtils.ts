@@ -1,6 +1,6 @@
 /**
  * 指定した開始値、終了値（または要素数）、ステップ幅に基づき数値のシーケンスを生成します。
- * 
+ *
  * - `seq(5)` → 0～4 の配列を返します。
  * - `seq(1, 6)` → 1～5 の配列を返します。
  *
@@ -9,17 +9,22 @@
  * @param step - ステップ幅（デフォルトは 1）
  * @returns 生成された数値の配列
  */
-export const seq = (start: number, stop?: number, step: number = 1): number[] => {
-  const actualStart = stop !== undefined ? start : 0;
-  const actualEnd = stop !== undefined ? stop : start;
+export const seq = (
+  start: number,
+  stop?: number,
+  step: number = 1
+): number[] => {
+  const actualStart = stop !== undefined ? start : 0
+  const actualEnd = stop !== undefined ? stop : start
 
   if (step === 0) {
-    throw new Error("step must not be zero");
+    throw new Error('step must not be zero')
   }
 
-  const length = Math.floor(Math.abs(actualEnd - actualStart - 1) / Math.abs(step)) + 1;
-  return Array.from({ length }, (_, i) => actualStart + i * step);
-};
+  const length =
+    Math.floor(Math.abs(actualEnd - actualStart - 1) / Math.abs(step)) + 1
+  return Array.from({ length }, (_, i) => actualStart + i * step)
+}
 
 /**
  * 指定した範囲内で、リストに含まれていない数値を返します。
@@ -34,16 +39,19 @@ export const findMissingNumbers = (
   start: number,
   stop?: number
 ): number[] => {
-  const actualStart = stop !== undefined ? start : 0;
-  const actualEnd = stop !== undefined ? stop : start;
+  const actualStart = stop !== undefined ? start : 0
+  const actualEnd = stop !== undefined ? stop : start
 
   const allNumbers = new Set(
-    Array.from({ length: actualEnd - actualStart + 1 }, (_, i) => actualStart + i)
-  );
-  const listSet = new Set(list);
+    Array.from(
+      { length: actualEnd - actualStart + 1 },
+      (_, i) => actualStart + i
+    )
+  )
+  const listSet = new Set(list)
 
-  return Array.from(allNumbers).filter(num => !listSet.has(num));
-};
+  return Array.from(allNumbers).filter((num) => !listSet.has(num))
+}
 
 /**
  * 禁止リストに含まれる数値を除外しながら、指定個数の連続する数値を生成します。
@@ -54,20 +62,20 @@ export const findMissingNumbers = (
  * @returns 禁止数値を除いた数値の配列
  */
 export const generateNumbersWithoutForbidden = (
-  n: number, 
+  n: number,
   forbiddenNumbers: number[],
   start: number = 0
 ): number[] => {
-  const forbiddenSet = new Set(forbiddenNumbers);
-  const result: number[] = [];
-  let current = start;
+  const forbiddenSet = new Set(forbiddenNumbers)
+  const result: number[] = []
+  let current = start
 
   while (result.length < n) {
     if (!forbiddenSet.has(current)) {
-      result.push(current);
+      result.push(current)
     }
-    current++;
+    current++
   }
 
-  return result;
-};
+  return result
+}

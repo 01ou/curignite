@@ -1,8 +1,8 @@
-import React from 'react';
-import character from "../../../assets/sample-character-idle.png";
-import { Avatar, Box } from '@mui/material';
-import { getCenteredPosition } from '../../../functions/style/sxUtils';
-import { keyframes } from '@mui/system';
+import React from 'react'
+import character from '../../../assets/sample-character-idle.png'
+import { Avatar, Box } from '@mui/material'
+import { getCenteredPosition } from '../../../functions/styleUtils/sxUtils'
+import { keyframes } from '@mui/system'
 
 // keyframes を使って上下に揺れるアニメーションを定義
 const swayAnimation = keyframes`
@@ -15,30 +15,30 @@ const swayAnimation = keyframes`
   100% {
     transform: translateY(0);
   }
-`;
+`
 
 interface CharacterDisplayProps {
-  size?: number;
+  size?: number
 }
 
 const CharacterDisplay: React.FC<CharacterDisplayProps> = ({ size = 160 }) => {
   return (
     <Box
       sx={{
-        position: "absolute",
-        ...getCenteredPosition({ x: 50, y: 45 })
+        position: 'absolute',
+        ...getCenteredPosition({ x: 50, y: 45 }),
       }}
     >
-      <Avatar 
-        src={character} 
-        sx={{ 
-          width: size, 
+      <Avatar
+        src={character}
+        sx={{
+          width: size,
           height: size,
-          animation: `${swayAnimation} 2s ease-in-out infinite`
-        }} 
+          animation: `${swayAnimation} 2s ease-in-out infinite`,
+        }}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default CharacterDisplay;
+export default CharacterDisplay

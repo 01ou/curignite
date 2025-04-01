@@ -1,33 +1,33 @@
-import { 
-  DocumentSnapshot, 
-  QuerySnapshot, 
-  doc, 
-  onSnapshot, 
-  CollectionReference, 
-  Unsubscribe 
-} from "firebase/firestore";
-import { nanoid } from "nanoid";
-import { BaseDocumentRead } from "../../../../types/firebase/firestore/baseTypes";
+import {
+  DocumentSnapshot,
+  QuerySnapshot,
+  doc,
+  onSnapshot,
+  CollectionReference,
+  Unsubscribe,
+} from 'firebase/firestore'
+import { nanoid } from 'nanoid'
+import { BaseDocumentRead } from '../../../../types/firebase/firestore/baseTypes'
 
 // 個別ドキュメント用のコールバック
 export interface Callback<Read extends BaseDocumentRead> {
-  unsubscribe?: Unsubscribe;
-  func: Map<string, (snapshot: DocumentSnapshot<Read>) => void>;
+  unsubscribe?: Unsubscribe
+  func: Map<string, (snapshot: DocumentSnapshot<Read>) => void>
 }
 
 // コレクション全体用のコールバック
 export interface CollectionCallback<Read extends BaseDocumentRead> {
-  unsubscribe?: Unsubscribe;
-  func: Map<string, (snapshot: QuerySnapshot<Read>) => void>;
+  unsubscribe?: Unsubscribe
+  func: Map<string, (snapshot: QuerySnapshot<Read>) => void>
 }
 
 export class CallbacksHandler<Read extends BaseDocumentRead> {
   // ドキュメントごとのコールバックは「コレクションのパス/documentId」の形のキーで管理
-  private callbacks: Map<string, Callback<Read>> = new Map();
+  private callbacks: Map<string, Callback<Read>> = new Map()
   // コレクション全体のコールバックは「コレクションのパス」をキーに管理
-  private collectionCallbacks: Map<string, CollectionCallback<Read>> = new Map();
+  private collectionCallbacks: Map<string, CollectionCallback<Read>> = new Map()
 
-  constructor() { }
+  constructor() {}
 
   /**
    * 個別ドキュメントのコールバックエントリを作成し、リスナーを登録する
@@ -38,14 +38,14 @@ export class CallbacksHandler<Read extends BaseDocumentRead> {
     collectionRef: CollectionReference<Read>,
     documentId: string
   ): Callback<Read> {
-    const key = `${collectionRef.path}/${documentId}`;
-    const docRef = doc(collectionRef, documentId);
-    const unsubscribe = onSnapshot(docRef, docSnapshot => {
-      this.callbacks.get(key)?.func.forEach(cb => cb(docSnapshot));
-    });
-    const entry: Callback<Read> = { func: new Map(), unsubscribe };
-    this.callbacks.set(key, entry);
-    return entry;
+    const key = `${collectionRef.path}/${documentId}`
+    const docRef = doc(collectionRef, documentId)
+    const unsubscribe = onSnapshot(docRef, (docSnapshot) => {
+      this.callbacks.get(key)?.func.forEach((cb) => cb(docSnapshot))
+    })
+    const entry: Callback<Read> = { func: new Map(), unsubscribe }
+    this.callbacks.set(key, entry)
+    return entry
   }
 
   /**
@@ -64,18 +64,20 @@ export class CallbacksHandler<Read extends BaseDocumentRead> {
     callbackId?: string,
     overwrite = false
   ): string {
-    const key = `${collectionRef.path}/${documentId}`;
-    const cbId = callbackId ?? nanoid();
-    let callbackEntry = this.callbacks.get(key) || this.createDocumentCallbackEntry(collectionRef, documentId);
+    const key = `${collectionRef.path}/${documentId}`
+    const cbId = callbackId ?? nanoid()
+    let callbackEntry =
+      this.callbacks.get(key) ||
+      this.createDocumentCallbackEntry(collectionRef, documentId)
 
     if (overwrite) {
-      callbackEntry.func.set(cbId, callback);
+      callbackEntry.func.set(cbId, callback)
     } else {
       if (!callbackEntry.func.has(cbId)) {
-        callbackEntry.func.set(cbId, callback);
+        callbackEntry.func.set(cbId, callback)
       }
     }
-    return cbId;
+    return cbId
   }
 
   /**
@@ -89,13 +91,13 @@ export class CallbacksHandler<Read extends BaseDocumentRead> {
     documentId: string,
     callbackId: string
   ): void {
-    const key = `${collectionRef.path}/${documentId}`;
-    const callbackEntry = this.callbacks.get(key);
+    const key = `${collectionRef.path}/${documentId}`
+    const callbackEntry = this.callbacks.get(key)
     if (callbackEntry) {
-      callbackEntry.func.delete(callbackId);
+      callbackEntry.func.delete(callbackId)
       if (callbackEntry.func.size === 0) {
-        callbackEntry.unsubscribe?.();
-        this.callbacks.delete(key);
+        callbackEntry.unsubscribe?.()
+        this.callbacks.delete(key)
       }
     }
   }
@@ -114,25 +116,25 @@ export class CallbacksHandler<Read extends BaseDocumentRead> {
     callbackId?: string,
     overwrite = false
   ): string {
-    const key = collectionRef.path;
-    let colCallback = this.collectionCallbacks.get(key);
+    const key = collectionRef.path
+    let colCallback = this.collectionCallbacks.get(key)
     if (!colCallback) {
-      colCallback = { func: new Map() };
-      const unsubscribe = onSnapshot(collectionRef, querySnapshot => {
-        colCallback!.func.forEach(cb => cb(querySnapshot));
-      });
-      colCallback.unsubscribe = unsubscribe;
-      this.collectionCallbacks.set(key, colCallback);
+      colCallback = { func: new Map() }
+      const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
+        colCallback!.func.forEach((cb) => cb(querySnapshot))
+      })
+      colCallback.unsubscribe = unsubscribe
+      this.collectionCallbacks.set(key, colCallback)
     }
-    const cbId = callbackId ?? nanoid();
+    const cbId = callbackId ?? nanoid()
     if (overwrite) {
-      colCallback.func.set(cbId, callback);
+      colCallback.func.set(cbId, callback)
     } else {
       if (!colCallback.func.has(cbId)) {
-        colCallback.func.set(cbId, callback);
+        colCallback.func.set(cbId, callback)
       }
     }
-    return cbId;
+    return cbId
   }
 
   /**
@@ -144,13 +146,13 @@ export class CallbacksHandler<Read extends BaseDocumentRead> {
     collectionRef: CollectionReference<Read>,
     callbackId: string
   ): void {
-    const key = collectionRef.path;
-    const colCallback = this.collectionCallbacks.get(key);
+    const key = collectionRef.path
+    const colCallback = this.collectionCallbacks.get(key)
     if (colCallback) {
-      colCallback.func.delete(callbackId);
+      colCallback.func.delete(callbackId)
       if (colCallback.func.size === 0) {
-        colCallback.unsubscribe?.();
-        this.collectionCallbacks.delete(key);
+        colCallback.unsubscribe?.()
+        this.collectionCallbacks.delete(key)
       }
     }
   }

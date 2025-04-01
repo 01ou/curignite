@@ -1,18 +1,18 @@
-import { 
-  CollectionReference, 
-  doc, 
-  DocumentData, 
-  FieldValue, 
-  Firestore, 
-  serverTimestamp, 
-  writeBatch, 
-  WriteBatch 
-} from "firebase/firestore";
-import { BaseDocument } from "../../../../types/firebase/firestore/baseTypes";
+import {
+  CollectionReference,
+  doc,
+  DocumentData,
+  FieldValue,
+  Firestore,
+  serverTimestamp,
+  writeBatch,
+  WriteBatch,
+} from 'firebase/firestore'
+import { BaseDocument } from '../../../../types/firebase/firestore/baseTypes'
 
 class BatchHandler<Write extends BaseDocument> {
   // コレクションごとにアクティブなバッチ操作を管理するマップ（キーは collectionRef.path）
-  private batches: Map<string, WriteBatch> = new Map();
+  private batches: Map<string, WriteBatch> = new Map()
 
   constructor(private firestore: Firestore) {}
 
@@ -22,11 +22,13 @@ class BatchHandler<Write extends BaseDocument> {
    * @param collectionRef 対象のコレクションRef
    */
   startBatch(collectionRef: CollectionReference<DocumentData>): void {
-    const key = collectionRef.path;
+    const key = collectionRef.path
     if (this.batches.has(key)) {
-      throw new Error("Batch already in progress for this collection. Commit or cancel the current batch first.");
+      throw new Error(
+        'Batch already in progress for this collection. Commit or cancel the current batch first.'
+      )
     }
-    this.batches.set(key, writeBatch(this.firestore));
+    this.batches.set(key, writeBatch(this.firestore))
   }
 
   /**
@@ -34,20 +36,22 @@ class BatchHandler<Write extends BaseDocument> {
    * @param collectionRef 対象のコレクションRef
    */
   cancelBatch(collectionRef: CollectionReference<DocumentData>): void {
-    const key = collectionRef.path;
-    this.batches.delete(key);
+    const key = collectionRef.path
+    this.batches.delete(key)
   }
 
   /**
    * 指定されたコレクションのバッチ操作をコミットします。
    * @param collectionRef 対象のコレクションRef
    */
-  async commitBatch(collectionRef: CollectionReference<DocumentData>): Promise<void> {
-    const key = collectionRef.path;
-    const batch = this.batches.get(key);
+  async commitBatch(
+    collectionRef: CollectionReference<DocumentData>
+  ): Promise<void> {
+    const key = collectionRef.path
+    const batch = this.batches.get(key)
     if (batch) {
-      await batch.commit();
-      this.batches.delete(key);
+      await batch.commit()
+      this.batches.delete(key)
     }
   }
 
@@ -56,13 +60,17 @@ class BatchHandler<Write extends BaseDocument> {
    * 存在しない場合はエラーをスローします。
    * @param collectionRef 対象のコレクションRef
    */
-  private getActiveBatch(collectionRef: CollectionReference<DocumentData>): WriteBatch {
-    const key = collectionRef.path;
-    const batch = this.batches.get(key);
+  private getActiveBatch(
+    collectionRef: CollectionReference<DocumentData>
+  ): WriteBatch {
+    const key = collectionRef.path
+    const batch = this.batches.get(key)
     if (!batch) {
-      throw new Error("No active batch operation for this collection. Please call startBatch() first.");
+      throw new Error(
+        'No active batch operation for this collection. Please call startBatch() first.'
+      )
     }
-    return batch;
+    return batch
   }
 
   /**
@@ -72,14 +80,14 @@ class BatchHandler<Write extends BaseDocument> {
    * @returns 前処理済みのデータ（createdAt と isActive を付与）
    */
   private writePreprocessing(
-    data: Write, 
+    data: Write,
     options: { setInvalid?: boolean } = {}
   ): Write & { createdAt: FieldValue; isActive: boolean } {
     return {
       ...data,
       createdAt: serverTimestamp(),
       isActive: !options.setInvalid,
-    };
+    }
   }
 
   /**
@@ -88,10 +96,16 @@ class BatchHandler<Write extends BaseDocument> {
    * @param documentId 作成するドキュメントのID
    * @param data 作成するデータ
    */
-  set(data: Write, collectionRef: CollectionReference, documentId: string | null): void {
-    const batch = this.getActiveBatch(collectionRef);
-    const docRef = documentId ? doc(collectionRef, documentId) : doc(collectionRef);
-    batch.set(docRef, this.writePreprocessing(data));
+  set(
+    data: Write,
+    collectionRef: CollectionReference,
+    documentId: string | null
+  ): void {
+    const batch = this.getActiveBatch(collectionRef)
+    const docRef = documentId
+      ? doc(collectionRef, documentId)
+      : doc(collectionRef)
+    batch.set(docRef, this.writePreprocessing(data))
   }
 
   /**
@@ -100,10 +114,14 @@ class BatchHandler<Write extends BaseDocument> {
    * @param documentId 更新するドキュメントのID
    * @param data 更新する部分データ
    */
-  update(data: Partial<Write>, collectionRef: CollectionReference, documentId: string): void {
-    const batch = this.getActiveBatch(collectionRef);
-    const docRef = doc(collectionRef, documentId);
-    batch.update(docRef, data as Write);
+  update(
+    data: Partial<Write>,
+    collectionRef: CollectionReference,
+    documentId: string
+  ): void {
+    const batch = this.getActiveBatch(collectionRef)
+    const docRef = doc(collectionRef, documentId)
+    batch.update(docRef, data as Write)
   }
 
   /**
@@ -112,10 +130,10 @@ class BatchHandler<Write extends BaseDocument> {
    * @param documentId 削除するドキュメントのID
    */
   delete(collectionRef: CollectionReference, documentId: string): void {
-    const batch = this.getActiveBatch(collectionRef);
-    const docRef = doc(collectionRef, documentId);
-    batch.delete(docRef);
+    const batch = this.getActiveBatch(collectionRef)
+    const docRef = doc(collectionRef, documentId)
+    batch.delete(docRef)
   }
 }
 
-export default BatchHandler;
+export default BatchHandler

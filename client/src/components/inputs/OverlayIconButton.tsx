@@ -1,29 +1,29 @@
-import { Avatar, Box, IconButton, SxProps, Theme } from '@mui/material';
-import React, { ReactNode } from 'react';
-import { hexToRgba } from '../../functions/style/colorUtils';
+import { Avatar, Box, IconButton, SxProps, Theme } from '@mui/material'
+import React, { ReactNode } from 'react'
+import { hexToRgba } from '../../functions/styleUtils/colorUtils'
 
 interface OverlayIconButtonProps {
   /** ボタンの一辺のサイズ */
-  size: number;
+  size: number
   /** オーバーレイの元となる HEX カラー（デフォルトは黒） */
-  overlayHexColor?: string;
+  overlayHexColor?: string
   /** オーバーレイの透明度（0〜1、デフォルトは0.3） */
-  overlayAlpha?: number;
+  overlayAlpha?: number
   /** 背景として利用する任意の ReactNode。これが指定されると src は無視されます */
-  background?: ReactNode;
+  background?: ReactNode
   /** 背景画像のソース。background 未指定の場合に Avatar で表示します */
-  src?: string;
+  src?: string
   /** 背景画像のサイズ倍率（Avatar 利用時のみ有効。デフォルトは1） */
-  imageScale?: number;
+  imageScale?: number
   /** オーバーレイ内に表示する要素 */
-  children?: ReactNode;
+  children?: ReactNode
   /** ボタンコンテナのスタイル上書き */
-  containerSx?: SxProps<Theme>;
+  containerSx?: SxProps<Theme>
   /** 背景部分のスタイル上書き */
-  backgroundSx?: SxProps<Theme>;
+  backgroundSx?: SxProps<Theme>
   /** オーバーレイ部分のスタイル上書き */
-  overlaySx?: SxProps<Theme>;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  overlaySx?: SxProps<Theme>
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 const OverlayIconButton: React.FC<OverlayIconButtonProps> = ({
@@ -37,15 +37,16 @@ const OverlayIconButton: React.FC<OverlayIconButtonProps> = ({
   containerSx,
   backgroundSx,
   overlaySx,
-  onClick
+  onClick,
 }) => {
-  const avatarSize = size * imageScale;
-  const overlayColor = hexToRgba(overlayHexColor, overlayAlpha);
+  const avatarSize = size * imageScale
+  const overlayColor = hexToRgba(overlayHexColor, overlayAlpha)
 
   // 背景部分の内容。background が指定されていればそれを使用、
   // そうでなければ src を利用した Avatar、さらに無ければデフォルトの Box を返す
-  const backgroundContent = background ?? (
-    src ? (
+  const backgroundContent =
+    background ??
+    (src ? (
       <Avatar
         src={src}
         sx={{
@@ -57,10 +58,10 @@ const OverlayIconButton: React.FC<OverlayIconButtonProps> = ({
             style: {
               width: avatarSize,
               height: avatarSize,
-              objectFit: 'cover',      // コンテナ全体を覆うように調整
-              objectPosition: 'center'   // 画像を中央に配置
-            }
-          }
+              objectFit: 'cover', // コンテナ全体を覆うように調整
+              objectPosition: 'center', // 画像を中央に配置
+            },
+          },
         }}
       />
     ) : (
@@ -72,19 +73,18 @@ const OverlayIconButton: React.FC<OverlayIconButtonProps> = ({
           backgroundColor: '#e0e0e0',
         }}
       />
-    )
-  );
+    ))
 
   return (
-    <IconButton 
+    <IconButton
       sx={{
         width: size,
         height: size,
         position: 'relative',
         p: 0,
-        transition: "transform 0.2s ease-in-out",
-        ":hover": {
-          transform: "scale(1.1)",
+        transition: 'transform 0.2s ease-in-out',
+        ':hover': {
+          transform: 'scale(1.1)',
         },
         ...containerSx,
       }}
@@ -118,7 +118,7 @@ const OverlayIconButton: React.FC<OverlayIconButtonProps> = ({
         </Box>
       </Box>
     </IconButton>
-  );
-};
+  )
+}
 
-export default OverlayIconButton;
+export default OverlayIconButton

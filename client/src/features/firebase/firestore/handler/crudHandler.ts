@@ -1,25 +1,48 @@
-import { 
-  CollectionReference, DocumentReference, DocumentSnapshot, QuerySnapshot, 
-  addDoc, deleteDoc, doc, getDoc, getDocs, updateDoc, setDoc, query, where, limit, 
-  startAfter, orderBy, serverTimestamp, FieldValue, QueryConstraint 
-} from "firebase/firestore";
-import { BaseDocumentRead, BaseDocument, SoftDeleteAdditionalField } from "../../../../types/firebase/firestore/baseTypes";
-import { parseDocumentSnapshot, parseQuerySnapshot } from "../snapshotUtils";
+import {
+  CollectionReference,
+  DocumentReference,
+  DocumentSnapshot,
+  QuerySnapshot,
+  addDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  updateDoc,
+  setDoc,
+  query,
+  where,
+  limit,
+  startAfter,
+  orderBy,
+  serverTimestamp,
+  FieldValue,
+  QueryConstraint,
+} from 'firebase/firestore'
+import {
+  BaseDocumentRead,
+  BaseDocument,
+  SoftDeleteAdditionalField,
+} from '../../../../types/firebase/firestore/baseTypes'
+import { parseDocumentSnapshot, parseQuerySnapshot } from '../snapshotUtils'
 
 export class CRUDHandler {
   /**
    * Firestore操作をハンドリングする共通ユーティリティ
    */
   private static async handleFirestoreOperation<T>(
-    operation: Promise<T>, 
-    action: string, 
+    operation: Promise<T>,
+    action: string,
     context?: string
   ): Promise<T> {
     try {
-      return await operation;
+      return await operation
     } catch (error) {
-      console.error(`[Firestore Error] ${action}${context ? ` (${context})` : ''}:`, error);
-      throw new Error(`[Firestore Error] ${action} failed.`);
+      console.error(
+        `[Firestore Error] ${action}${context ? ` (${context})` : ''}:`,
+        error
+      )
+      throw new Error(`[Firestore Error] ${action} failed.`)
     }
   }
 
@@ -31,14 +54,17 @@ export class CRUDHandler {
    */
   private static writePreprocessing<Write>(
     data: Write,
-    options: { setInvalid?: boolean; additionalFields?: Record<string, any> } = {}
+    options: {
+      setInvalid?: boolean
+      additionalFields?: Record<string, any>
+    } = {}
   ): Write & { createdAt: FieldValue; isActive: boolean } {
     return {
       ...data,
       createdAt: serverTimestamp(),
       isActive: !options.setInvalid,
       ...options.additionalFields,
-    };
+    }
   }
 
   /**
@@ -48,15 +74,15 @@ export class CRUDHandler {
    * @returns 作成されたドキュメントの参照
    */
   public static async create<Write extends BaseDocument>(
-    collectionRef: CollectionReference, 
+    collectionRef: CollectionReference,
     data: Write
   ): Promise<DocumentReference<Write>> {
-    const processedData = this.writePreprocessing(data);
+    const processedData = this.writePreprocessing(data)
     const result = await this.handleFirestoreOperation(
       addDoc(collectionRef, processedData),
-      "Failed to create document"
-    );
-    return result as DocumentReference<Write>;
+      'Failed to create document'
+    )
+    return result as DocumentReference<Write>
   }
 
   /**
@@ -68,16 +94,16 @@ export class CRUDHandler {
    */
   public static async createWithId<Write extends BaseDocument>(
     collectionRef: CollectionReference,
-    documentId: string, 
-    data: Write, 
+    documentId: string,
+    data: Write,
     merge: boolean = false
   ): Promise<void> {
-    const docRef = doc(collectionRef, documentId);
+    const docRef = doc(collectionRef, documentId)
     await this.handleFirestoreOperation(
       setDoc(docRef, this.writePreprocessing(data), { merge }),
-      "Failed to create document with ID",
+      'Failed to create document with ID',
       documentId
-    );
+    )
   }
 
   /**
@@ -89,12 +115,12 @@ export class CRUDHandler {
     collectionRef: CollectionReference<Read>,
     documentId: string
   ): Promise<DocumentSnapshot<Read>> {
-    const docRef = doc(collectionRef, documentId);
+    const docRef = doc(collectionRef, documentId)
     return this.handleFirestoreOperation(
       getDoc(docRef),
-      "Failed to read document snapshot",
+      'Failed to read document snapshot',
       documentId
-    );
+    )
   }
 
   /**
@@ -106,8 +132,11 @@ export class CRUDHandler {
     collectionRef: CollectionReference,
     documentId: string
   ): Promise<Read | null> {
-    const docSnapshot = await this.readAsDocumentSnapshot(collectionRef as CollectionReference<Read>, documentId);
-    return parseDocumentSnapshot<Read>(docSnapshot);
+    const docSnapshot = await this.readAsDocumentSnapshot(
+      collectionRef as CollectionReference<Read>,
+      documentId
+    )
+    return parseDocumentSnapshot<Read>(docSnapshot)
   }
 
   /**
@@ -121,12 +150,12 @@ export class CRUDHandler {
     documentId: string,
     data: Partial<Write>
   ): Promise<void> {
-    const docRef = doc(collectionRef, documentId);
+    const docRef = doc(collectionRef, documentId)
     await this.handleFirestoreOperation(
       updateDoc(docRef, { ...data, updatedAt: serverTimestamp() }),
-      "Failed to update document",
+      'Failed to update document',
       documentId
-    );
+    )
   }
 
   /**
@@ -138,12 +167,12 @@ export class CRUDHandler {
     collectionRef: CollectionReference,
     documentId: string
   ): Promise<void> {
-    const docRef = doc(collectionRef, documentId);
+    const docRef = doc(collectionRef, documentId)
     await this.handleFirestoreOperation(
       deleteDoc(docRef),
-      "Failed to hard delete document",
+      'Failed to hard delete document',
       documentId
-    );
+    )
   }
 
   /**
@@ -157,11 +186,11 @@ export class CRUDHandler {
     documentId: string,
     updateFields?: Partial<Write>
   ): Promise<void> {
-    await this.update(
-      collectionRef,
-      documentId,
-      { ...updateFields, isActive: false, deletedAt: serverTimestamp() } as Partial<Write & SoftDeleteAdditionalField>
-    );
+    await this.update(collectionRef, documentId, {
+      ...updateFields,
+      isActive: false,
+      deletedAt: serverTimestamp(),
+    } as Partial<Write & SoftDeleteAdditionalField>)
   }
 
   /**
@@ -173,11 +202,15 @@ export class CRUDHandler {
     collectionRef: CollectionReference<Read>,
     ...queryConstraints: QueryConstraint[]
   ): Promise<QuerySnapshot<Read>> {
-    const q = query(collectionRef, where("isActive", "==", true), ...queryConstraints);
+    const q = query(
+      collectionRef,
+      where('isActive', '==', true),
+      ...queryConstraints
+    )
     return this.handleFirestoreOperation(
       getDocs(q),
-      "Failed to get query snapshot"
-    );
+      'Failed to get query snapshot'
+    )
   }
 
   /**
@@ -189,8 +222,11 @@ export class CRUDHandler {
     collectionRef: CollectionReference,
     ...queryConstraints: QueryConstraint[]
   ): Promise<Read[]> {
-    const querySnapshot = await this.getAllAsQuerySnapshot(collectionRef as CollectionReference<Read>, ...queryConstraints);
-    return parseQuerySnapshot<Read>(querySnapshot);
+    const querySnapshot = await this.getAllAsQuerySnapshot(
+      collectionRef as CollectionReference<Read>,
+      ...queryConstraints
+    )
+    return parseQuerySnapshot<Read>(querySnapshot)
   }
 
   /**
@@ -205,16 +241,16 @@ export class CRUDHandler {
     value: any
   ): Promise<Read | null> {
     const q = query(
-      collectionRef, 
-      where(field as string, "==", value), 
-      where("isActive", "==", true), 
+      collectionRef,
+      where(field as string, '==', value),
+      where('isActive', '==', true),
       limit(1)
-    );
+    )
     const querySnapshot = await this.handleFirestoreOperation(
       getDocs(q),
-      "Failed to get first match"
-    );
-    return parseDocumentSnapshot<Read>(querySnapshot.docs[0]);
+      'Failed to get first match'
+    )
+    return parseDocumentSnapshot<Read>(querySnapshot.docs[0])
   }
 
   /**
@@ -229,16 +265,16 @@ export class CRUDHandler {
     additionalConstraints: QueryConstraint[] = []
   ): QueryConstraint[] {
     const constraints: QueryConstraint[] = [
-      where("isActive", "==", true),
-      orderBy("createdAt", "desc")
-    ];
+      where('isActive', '==', true),
+      orderBy('createdAt', 'desc'),
+    ]
     if (startAfterDoc) {
-      constraints.push(startAfter(startAfterDoc));
+      constraints.push(startAfter(startAfterDoc))
     }
     if (limitCount !== undefined) {
-      constraints.push(limit(limitCount));
+      constraints.push(limit(limitCount))
     }
-    return constraints.concat(additionalConstraints);
+    return constraints.concat(additionalConstraints)
   }
 
   /**
@@ -254,12 +290,16 @@ export class CRUDHandler {
     limitCount?: number,
     ...queryConstraints: QueryConstraint[]
   ): Promise<Read[]> {
-    const constraints = this.buildQueryConstraints(startAfterDoc, limitCount, queryConstraints);
-    const fullQuery = query(collectionRef, ...constraints);
+    const constraints = this.buildQueryConstraints(
+      startAfterDoc,
+      limitCount,
+      queryConstraints
+    )
+    const fullQuery = query(collectionRef, ...constraints)
     const querySnapshot = await this.handleFirestoreOperation(
       getDocs(fullQuery),
-      "Failed to get paginated data"
-    );
-    return parseQuerySnapshot<Read>(querySnapshot);
+      'Failed to get paginated data'
+    )
+    return parseQuerySnapshot<Read>(querySnapshot)
   }
 }

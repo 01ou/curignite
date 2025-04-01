@@ -1,6 +1,14 @@
-import { Timestamp } from "firebase/firestore";
-import { TimeTypes, ISODate, ISODateTime, TimeSizeUnit } from "../../types/utils/dateTimeTypes";
-import { MINUTES_IN_MILLISECOND, TIME_UNIT_IN_MILLISECONDS } from "../../constants/dateTimeConstants";
+import { Timestamp } from 'firebase/firestore'
+import {
+  TimeTypes,
+  ISODate,
+  ISODateTime,
+  TimeSizeUnit,
+} from '../../types/utils/dateTimeTypes'
+import {
+  MINUTES_IN_MILLISECOND,
+  TIME_UNIT_IN_MILLISECONDS,
+} from '../../constants/dateTimeConstants'
 
 /**
  * ISO形式の日付文字列をDateオブジェクトに変換します。
@@ -8,9 +16,9 @@ import { MINUTES_IN_MILLISECOND, TIME_UNIT_IN_MILLISECONDS } from "../../constan
  * @returns 有効なDateオブジェクト、無効な場合はnull
  */
 const parseISODate = (isoDate: ISODate): Date | null => {
-  const date = new Date(`${isoDate}T00:00:00Z`);
-  return isNaN(date.getTime()) ? null : date;
-};
+  const date = new Date(`${isoDate}T00:00:00Z`)
+  return isNaN(date.getTime()) ? null : date
+}
 
 /**
  * ISO形式の日時文字列をDateオブジェクトに変換します。
@@ -18,9 +26,9 @@ const parseISODate = (isoDate: ISODate): Date | null => {
  * @returns 有効なDateオブジェクト、無効な場合はnull
  */
 const parseISODateTime = (isoDateTime: ISODateTime): Date | null => {
-  const date = new Date(isoDateTime);
-  return isNaN(date.getTime()) ? null : date;
-};
+  const date = new Date(isoDateTime)
+  return isNaN(date.getTime()) ? null : date
+}
 
 /**
  * 様々な形式の時間をDateオブジェクトに変換します。
@@ -29,31 +37,31 @@ const parseISODateTime = (isoDateTime: ISODateTime): Date | null => {
  * @throws 無効な入力の場合はエラーをスローします
  */
 export const convertToDate = (time: TimeTypes): Date => {
-  if (typeof time === "number" || time instanceof Date) return new Date(time);
-  if (time instanceof Timestamp) return time.toDate();
+  if (typeof time === 'number' || time instanceof Date) return new Date(time)
+  if (time instanceof Timestamp) return time.toDate()
 
-  if (typeof time === "string") {
-    let date: Date | null = null;
+  if (typeof time === 'string') {
+    let date: Date | null = null
     // "Z" で終わる文字列はISO形式の日時文字列として扱う
-    if (time.endsWith("Z")) {
-      date = parseISODateTime(time as ISODateTime);
+    if (time.endsWith('Z')) {
+      date = parseISODateTime(time as ISODateTime)
     } else {
-      date = parseISODate(time as ISODate);
+      date = parseISODate(time as ISODate)
     }
-    if (!date) throw new Error(`Invalid ISO date string: ${time}`);
-    return date;
+    if (!date) throw new Error(`Invalid ISO date string: ${time}`)
+    return date
   }
 
-  throw new Error(`Unsupported time type: ${typeof time}`);
-};
+  throw new Error(`Unsupported time type: ${typeof time}`)
+}
 
 export const convertToLocalTimeMs = (dateTime: TimeTypes): number => {
-  const date = convertToDate(dateTime);
-  return date.getTime() - date.getTimezoneOffset() * MINUTES_IN_MILLISECOND;
+  const date = convertToDate(dateTime)
+  return date.getTime() - date.getTimezoneOffset() * MINUTES_IN_MILLISECOND
 }
 
 export const getLocalDate = (baseDate: TimeTypes = new Date()) => {
-  return new Date(convertToLocalTimeMs(baseDate));
+  return new Date(convertToLocalTimeMs(baseDate))
 }
 
 /**
@@ -62,8 +70,8 @@ export const getLocalDate = (baseDate: TimeTypes = new Date()) => {
  * @returns ミリ秒
  */
 export const convertToMilliseconds = (time: TimeTypes): number => {
-  return convertToDate(time).getTime();
-};
+  return convertToDate(time).getTime()
+}
 
 /**
  * 入力された時間をISO形式の日付文字列 (YYYY-MM-DD) に変換します。
@@ -71,9 +79,9 @@ export const convertToMilliseconds = (time: TimeTypes): number => {
  * @returns ISO形式の日付文字列
  */
 export const toISODate = (dateTime: TimeTypes): ISODate => {
-  const isoString = convertToDate(dateTime).toISOString();
-  return isoString.slice(0, 10) as ISODate;
-};
+  const isoString = convertToDate(dateTime).toISOString()
+  return isoString.slice(0, 10) as ISODate
+}
 
 /**
  * 入力された時間をISO形式の日時文字列に変換します。
@@ -81,8 +89,8 @@ export const toISODate = (dateTime: TimeTypes): ISODate => {
  * @returns ISO形式の日時文字列
  */
 export const toISODateTime = (dateTime: TimeTypes): ISODateTime => {
-  return convertToDate(dateTime).toISOString() as ISODateTime;
-};
+  return convertToDate(dateTime).toISOString() as ISODateTime
+}
 
 /**
  * TimeTypes の入力を Timestamp オブジェクトに変換します。
@@ -90,24 +98,28 @@ export const toISODateTime = (dateTime: TimeTypes): ISODateTime => {
  * @returns 対応する Timestamp オブジェクト
  */
 export const toTimestamp = (input: TimeTypes): Timestamp => {
-  return Timestamp.fromDate(convertToDate(input));
-};
+  return Timestamp.fromDate(convertToDate(input))
+}
 
 /**
- * ミリ秒を指定した時間単位に変換する関数（切り上げ）  
+ * ミリ秒を指定した時間単位に変換する関数（切り上げ）
  * 例：ミリ秒を「minutes」単位に変換する場合、ms / TIME_UNIT_IN_MILLISECONDS["minutes"] を切り上げた値を返す。
  *
  * @param ms - ミリ秒
  * @param unit - 変換先の単位（デフォルトは "minutes"）
  * @returns 指定した単位に変換された数値
  */
-export const convertMsToUnit = (ms: number, unit: TimeSizeUnit = "minutes", decimalPlaces: number | null = 0): number => {
-  const unitInMs = TIME_UNIT_IN_MILLISECONDS[unit];
+export const convertMsToUnit = (
+  ms: number,
+  unit: TimeSizeUnit = 'minutes',
+  decimalPlaces: number | null = 0
+): number => {
+  const unitInMs = TIME_UNIT_IN_MILLISECONDS[unit]
   if (decimalPlaces === null) {
-    return ms / unitInMs;
+    return ms / unitInMs
   }
-  return parseFloat((ms / unitInMs).toFixed(decimalPlaces));
-};
+  return parseFloat((ms / unitInMs).toFixed(decimalPlaces))
+}
 
 /**
  * 指定した時間単位に相当するミリ秒を返す関数
@@ -116,5 +128,5 @@ export const convertMsToUnit = (ms: number, unit: TimeSizeUnit = "minutes", deci
  * @returns 単位に相当するミリ秒
  */
 export const getMsPerUnit = (unit: TimeSizeUnit): number => {
-  return TIME_UNIT_IN_MILLISECONDS[unit];
-};
+  return TIME_UNIT_IN_MILLISECONDS[unit]
+}

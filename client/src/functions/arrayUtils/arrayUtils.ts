@@ -3,10 +3,10 @@
  * 配列が空の場合は undefined を返します。
  */
 export const getRandomElement = <T>(array: T[]): T | undefined => {
-  if (array.length === 0) return undefined;
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
-};
+  if (array.length === 0) return undefined
+  const randomIndex = Math.floor(Math.random() * array.length)
+  return array[randomIndex]
+}
 
 /**
  * 配列を m 個の部分配列に分割します。各部分配列は可能な限り均等なサイズとなります。
@@ -17,21 +17,21 @@ export const getRandomElement = <T>(array: T[]): T | undefined => {
  */
 export const splitArray = <T>(array: T[], m: number): T[][] => {
   if (m <= 0) {
-    console.error('m には正の整数を指定してください: ', m);
-    return [];
+    console.error('m には正の整数を指定してください: ', m)
+    return []
   }
-  
-  const result: T[][] = [];
-  const len = array.length;
-  const quotient = Math.floor(len / m);
-  const remainder = len % m;
-  
-  let start = 0;
+
+  const result: T[][] = []
+  const len = array.length
+  const quotient = Math.floor(len / m)
+  const remainder = len % m
+
+  let start = 0
   for (let i = 0; i < m; i++) {
-    const size = quotient + (i < remainder ? 1 : 0);
-    result.push(array.slice(start, start + size));
-    start += size;
+    const size = quotient + (i < remainder ? 1 : 0)
+    result.push(array.slice(start, start + size))
+    start += size
   }
-  
-  return result;
-};
+
+  return result
+}

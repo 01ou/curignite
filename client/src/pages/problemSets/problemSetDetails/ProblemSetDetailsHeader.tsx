@@ -1,18 +1,22 @@
-import { Stack, Box, Avatar, Typography } from '@mui/material';
-import React from 'react';
-import { hexToRgba } from '../../../functions/style/colorUtils';
-import { getSubjectSetting } from '../main/problemSetSubjectSetting';
-import { Subject } from '../../../types/app/subjects';
-import { useTranslation } from 'react-i18next';
+import { Stack, Box, Avatar, Typography } from '@mui/material'
+import React from 'react'
+import { hexToRgba } from '../../../functions/styleUtils/colorUtils'
+import { getSubjectSetting } from '../main/problemSetSubjectSetting'
+import { Subject } from '../../../types/app/subjects'
+import { useTranslation } from 'react-i18next'
 
 interface ProblemSetDetailsHeaderProps {
-  problemSetName: string;
-  subject: Subject;
-  detailedSubject: string | null;
+  problemSetName: string
+  subject: Subject
+  detailedSubject: string | null
 }
 
-const ProblemSetDetailsHeader: React.FC<ProblemSetDetailsHeaderProps> = ({ problemSetName, subject, detailedSubject }) => {
-  const { t } = useTranslation();
+const ProblemSetDetailsHeader: React.FC<ProblemSetDetailsHeaderProps> = ({
+  problemSetName,
+  subject,
+  detailedSubject,
+}) => {
+  const { t } = useTranslation()
 
   return (
     <Stack direction="row" alignItems="center" spacing={1} ml={1}>
@@ -42,7 +46,7 @@ const ProblemSetDetailsHeader: React.FC<ProblemSetDetailsHeaderProps> = ({ probl
       </Box>
       <Typography variant="h6">{problemSetName}</Typography>
     </Stack>
-  );
-};
+  )
+}
 
-export default ProblemSetDetailsHeader;
+export default ProblemSetDetailsHeader

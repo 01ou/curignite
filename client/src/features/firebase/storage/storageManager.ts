@@ -1,139 +1,160 @@
-import { FirebaseStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
-import { FileExtension } from "../../../types/utils/fileTypes";
-import { storage } from "../firebase";
+import {
+  FirebaseStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage'
+import { FileExtension } from '../../../types/utils/fileTypes'
+import { storage } from '../firebase'
 
 export class StorageManager {
-  constructor(private storage: FirebaseStorage) { }
+  constructor(private storage: FirebaseStorage) {}
 
-  async uploadFiles(path: string, id: string, startIndex: number, files: File[]): Promise<string[]> {
+  async uploadFiles(
+    path: string,
+    id: string,
+    startIndex: number,
+    files: File[]
+  ): Promise<string[]> {
     const uploadPromises = files.map(async (file, index) => {
       try {
-        const idWithIndex = `${id}_${startIndex + index}`;
-        return await this.uploadFile(path, idWithIndex, file);
+        const idWithIndex = `${id}_${startIndex + index}`
+        return await this.uploadFile(path, idWithIndex, file)
       } catch (error) {
-        console.error(`ファイル${index}のアップロードに失敗しました: `, error);
-        return null;
+        console.error(`ファイル${index}のアップロードに失敗しました: `, error)
+        return null
       }
-    });
-  
-    return (await Promise.all(uploadPromises)).filter(url => url !== null) as string[];
+    })
+
+    return (await Promise.all(uploadPromises)).filter(
+      (url) => url !== null
+    ) as string[]
   }
 
   private getFileId(path: string, id: string) {
-    return `${path}_${id}`;
+    return `${path}_${id}`
   }
-  
+
   // ファイルのアップロード
   async uploadFile(
     path: string,
     id: string,
     file: File,
-    options: { format?: FileExtension, maxSizeMB?: number } = {}
+    options: { format?: FileExtension; maxSizeMB?: number } = {}
   ): Promise<string> {
-    const { format = this.getFileExtension(file.type), maxSizeMB = 5 } = options;
-    
+    const { format = this.getFileExtension(file.type), maxSizeMB = 5 } = options
+
     // ファイルサイズの検証
     if (file.size > maxSizeMB * 1024 * 1024) {
-      throw new Error(`ファイルサイズが大きすぎます。最大 ${maxSizeMB}MB です。`);
+      throw new Error(
+        `ファイルサイズが大きすぎます。最大 ${maxSizeMB}MB です。`
+      )
     }
-  
+
     // ファイル拡張子の検証
-    const fileExtension = this.getFileExtension(file.type);
+    const fileExtension = this.getFileExtension(file.type)
     if (format && fileExtension !== format) {
-      throw new Error(`指定された形式 ${format} と一致しません。`);
+      throw new Error(`指定された形式 ${format} と一致しません。`)
     }
-  
-    const storageRef = ref(this.storage, path);
-    const fileRef = ref(storageRef, `${id}.${format}`);
-  
+
+    const storageRef = ref(this.storage, path)
+    const fileRef = ref(storageRef, `${id}.${format}`)
+
     try {
       // アップロードタスクの実行と進行状況のトラッキング
       await new Promise<void>((resolve, reject) => {
-        const uploadTask = uploadBytesResumable(fileRef, file);
-  
+        const uploadTask = uploadBytesResumable(fileRef, file)
+
         uploadTask.on(
           'state_changed',
           (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log(`Upload is ${progress}% done`);
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            console.log(`Upload is ${progress}% done`)
           },
           (error) => {
-            console.error('アップロード中にエラーが発生しました: ', error);
-            reject(error);
+            console.error('アップロード中にエラーが発生しました: ', error)
+            reject(error)
           },
           () => {
-            console.log('アップロードが完了しました');
-            resolve();
+            console.log('アップロードが完了しました')
+            resolve()
           }
-        );
-      });
+        )
+      })
 
       return this.getFileId(path, id)
     } catch (error) {
-      console.error('ファイルのアップロードに失敗しました: ', error);
-      throw error;
+      console.error('ファイルのアップロードに失敗しました: ', error)
+      throw error
     }
-  }  
+  }
 
   // ファイルの取得
   async getFileUrl(fileId: string): Promise<string> {
     try {
-      if (!fileId) return "";
-  
+      if (!fileId) return ''
+
       // `_` を `/` に置き換える
-      const adjustedFileId = fileId.replace(/_/g, '/');
-  
-      const fileRef = ref(this.storage, adjustedFileId);
-      const url = await getDownloadURL(fileRef);
-      return url;
+      const adjustedFileId = fileId.replace(/_/g, '/')
+
+      const fileRef = ref(this.storage, adjustedFileId)
+      const url = await getDownloadURL(fileRef)
+      return url
     } catch (error) {
-      console.error('ファイルの取得に失敗しました: ', error);
-      throw error;
+      console.error('ファイルの取得に失敗しました: ', error)
+      throw error
     }
-  }  
+  }
 
   async getFileUrls(fileIds: string[]): Promise<string[]> {
     try {
-      const urlPromises = fileIds.map(id => this.getFileUrl(id));
-      return await Promise.all(urlPromises);
+      const urlPromises = fileIds.map((id) => this.getFileUrl(id))
+      return await Promise.all(urlPromises)
     } catch (error) {
-      console.error('複数のファイルの取得に失敗しました: ', error);
-      throw error;
+      console.error('複数のファイルの取得に失敗しました: ', error)
+      throw error
     }
   }
-  
+
   // ファイルの削除
   async deleteFile(fileId: string): Promise<void> {
     try {
-      const fileRef = ref(this.storage, fileId);
-      await deleteObject(fileRef);
-      console.log('ファイルが削除されました');
+      const fileRef = ref(this.storage, fileId)
+      await deleteObject(fileRef)
+      console.log('ファイルが削除されました')
     } catch (error) {
-      console.error('ファイルの削除に失敗しました: ', error);
-      throw error;
+      console.error('ファイルの削除に失敗しました: ', error)
+      throw error
     }
   }
 
   // ヘルパー関数
 
   /**
- * ファイルパスまたは URL から拡張子を取得する関数
- * @param {string} url - ファイルパスまたは URL
- * @returns {string} - ファイルの拡張子（例: 'jpg', 'png'）
- */
+   * ファイルパスまたは URL から拡張子を取得する関数
+   * @param {string} url - ファイルパスまたは URL
+   * @returns {string} - ファイルの拡張子（例: 'jpg', 'png'）
+   */
   getFileExtension(url: string): FileExtension | '' {
-  // クエリパラメータとハッシュフラグメントを削除
-  const trimmedUrl = url.split('?')[0].split('#')[0];
+    // クエリパラメータとハッシュフラグメントを削除
+    const trimmedUrl = url.split('?')[0].split('#')[0]
 
-  // パーセントエンコードされたファイル名をデコード
-  const decodedUrl = decodeURIComponent(trimmedUrl);
+    // パーセントエンコードされたファイル名をデコード
+    const decodedUrl = decodeURIComponent(trimmedUrl)
 
-  // ドットで分割して拡張子を取得
-  const parts = decodedUrl.split('.');
-  const extension = parts.length > 1 ? parts.pop()?.toLowerCase() as FileExtension || '' : '';
+    // ドットで分割して拡張子を取得
+    const parts = decodedUrl.split('.')
+    const extension =
+      parts.length > 1
+        ? (parts.pop()?.toLowerCase() as FileExtension) || ''
+        : ''
 
-  return Object.values(FileExtension).includes(extension as FileExtension) ? extension : '';
+    return Object.values(FileExtension).includes(extension as FileExtension)
+      ? extension
+      : ''
+  }
 }
-}
 
-export const storageManager = new StorageManager(storage);
+export const storageManager = new StorageManager(storage)

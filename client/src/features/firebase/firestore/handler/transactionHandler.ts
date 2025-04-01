@@ -1,17 +1,23 @@
-import { 
-  CollectionReference, 
-  doc, 
-  DocumentData, 
-  DocumentSnapshot, 
-  Firestore, 
-  runTransaction, 
-  Transaction 
-} from "firebase/firestore";
-import { BaseDocumentRead, BaseDocument } from "../../../../types/firebase/firestore/baseTypes";
+import {
+  CollectionReference,
+  doc,
+  DocumentData,
+  DocumentSnapshot,
+  Firestore,
+  runTransaction,
+  Transaction,
+} from 'firebase/firestore'
+import {
+  BaseDocumentRead,
+  BaseDocument,
+} from '../../../../types/firebase/firestore/baseTypes'
 
-class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocument> {
+class TransactionHandler<
+  Read extends BaseDocumentRead,
+  Write extends BaseDocument,
+> {
   // コレクションごとにアクティブなトランザクションを管理するマップ
-  private transactions: Map<string, Transaction> = new Map();
+  private transactions: Map<string, Transaction> = new Map()
 
   constructor(private firestore: Firestore) {}
 
@@ -27,18 +33,18 @@ class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocume
     collectionRef: CollectionReference<DocumentData>,
     transactionCallback: (transaction: Transaction) => Promise<T>
   ): Promise<T> {
-    const key = collectionRef.path;
+    const key = collectionRef.path
     if (this.transactions.has(key)) {
-      throw new Error("Transaction already in progress for this collection.");
+      throw new Error('Transaction already in progress for this collection.')
     }
     return await runTransaction(this.firestore, async (transaction) => {
-      this.transactions.set(key, transaction);
+      this.transactions.set(key, transaction)
       try {
-        return await transactionCallback(transaction);
+        return await transactionCallback(transaction)
       } finally {
-        this.transactions.delete(key);
+        this.transactions.delete(key)
       }
-    });
+    })
   }
 
   /**
@@ -47,13 +53,17 @@ class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocume
    *
    * @param collectionRef 対象のコレクションRef
    */
-  private getActiveTransaction(collectionRef: CollectionReference<DocumentData>): Transaction {
-    const key = collectionRef.path;
-    const transaction = this.transactions.get(key);
+  private getActiveTransaction(
+    collectionRef: CollectionReference<DocumentData>
+  ): Transaction {
+    const key = collectionRef.path
+    const transaction = this.transactions.get(key)
     if (!transaction) {
-      throw new Error("No active transaction for this collection. Please start a transaction first.");
+      throw new Error(
+        'No active transaction for this collection. Please start a transaction first.'
+      )
     }
-    return transaction;
+    return transaction
   }
 
   /**
@@ -67,9 +77,9 @@ class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocume
     collectionRef: CollectionReference<Read>,
     documentId: string
   ): Promise<DocumentSnapshot<Read>> {
-    const transaction = this.getActiveTransaction(collectionRef);
-    const docRef = doc(collectionRef, documentId);
-    return await transaction.get(docRef);
+    const transaction = this.getActiveTransaction(collectionRef)
+    const docRef = doc(collectionRef, documentId)
+    return await transaction.get(docRef)
   }
 
   /**
@@ -84,9 +94,9 @@ class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocume
     documentId: string,
     data: Write
   ): void {
-    const transaction = this.getActiveTransaction(collectionRef);
-    const docRef = doc(collectionRef, documentId);
-    transaction.set(docRef, data);
+    const transaction = this.getActiveTransaction(collectionRef)
+    const docRef = doc(collectionRef, documentId)
+    transaction.set(docRef, data)
   }
 
   /**
@@ -101,9 +111,9 @@ class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocume
     documentId: string,
     data: Partial<Write>
   ): void {
-    const transaction = this.getActiveTransaction(collectionRef);
-    const docRef = doc(collectionRef, documentId);
-    transaction.update(docRef, data as Write);
+    const transaction = this.getActiveTransaction(collectionRef)
+    const docRef = doc(collectionRef, documentId)
+    transaction.update(docRef, data as Write)
   }
 
   /**
@@ -112,14 +122,11 @@ class TransactionHandler<Read extends BaseDocumentRead, Write extends BaseDocume
    * @param collectionRef 対象のコレクションRef
    * @param documentId 削除するドキュメントのID
    */
-  delete(
-    collectionRef: CollectionReference,
-    documentId: string
-  ): void {
-    const transaction = this.getActiveTransaction(collectionRef);
-    const docRef = doc(collectionRef, documentId);
-    transaction.delete(docRef);
+  delete(collectionRef: CollectionReference, documentId: string): void {
+    const transaction = this.getActiveTransaction(collectionRef)
+    const docRef = doc(collectionRef, documentId)
+    transaction.delete(docRef)
   }
 }
 
-export default TransactionHandler;
+export default TransactionHandler

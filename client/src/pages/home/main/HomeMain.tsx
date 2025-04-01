@@ -1,19 +1,19 @@
 // HomeMain.tsx
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import BackgroundContainer from "../../../components/display/BackgroundContainer";
-import background from "../../../assets/backgrounds/room.png"
-import { MenuBook, Task } from "@mui/icons-material";
-import FloatingButton from "../../../components/inputs/FloatingButton";
-import { getTextOutline } from "../../../functions/style/sxUtils";
-import CharacterDisplay from "../../auth/main/CharacterDisplay";
-import ItemCountDisplay from "./ItemCountDisplay";
-import StartButton from "./StartButton";
-import HomeBottomNavigation from "../navigation/HomeBottomNavigation";
-import itemImage from "../../../assets/item.png";
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import BackgroundContainer from '../../../components/display/BackgroundContainer'
+import background from '../../../assets/backgrounds/room.png'
+import { MenuBook, Task } from '@mui/icons-material'
+import FloatingButton from '../../../components/inputs/FloatingButton'
+import { getTextOutline } from '../../../functions/styleUtils/sxUtils'
+import CharacterDisplay from '../../auth/main/CharacterDisplay'
+import ItemCountDisplay from './ItemCountDisplay'
+import StartButton from './StartButton'
+import HomeBottomNavigation from '../navigation/HomeBottomNavigation'
+import itemImage from '../../../assets/item.png'
 
 const HomeMain: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <BackgroundContainer backgroundImage={background}>
@@ -22,7 +22,7 @@ const HomeMain: React.FC = () => {
         text="問題集"
         top={10}
         left={10}
-        children={<MenuBook sx={{ width: 60, height: 60, color: "#5FC4F3" }} />}
+        children={<MenuBook sx={{ width: 60, height: 60, color: '#5FC4F3' }} />}
         size={80}
         shiftText={-10}
         contentsMb={0.5}
@@ -30,19 +30,19 @@ const HomeMain: React.FC = () => {
         textVariant="h6"
         buttonSx={{
           border: 2,
-          borderColor: "#301C1C",
+          borderColor: '#301C1C',
         }}
         labelSx={{
-          color: "#FCFCFC",
-          ...getTextOutline("#301C1C", 1),
+          color: '#FCFCFC',
+          ...getTextOutline('#301C1C', 1),
         }}
-        onClick={() => navigate("/problemSets")}
+        onClick={() => navigate('/problemSets')}
       />
       <FloatingButton
         text="課題"
         top={105}
         left={10}
-        children={<Task sx={{ width: 60, height: 60, color: "#5FC4F3" }} />}
+        children={<Task sx={{ width: 60, height: 60, color: '#5FC4F3' }} />}
         size={80}
         shiftText={-10}
         contentsMb={0.5}
@@ -50,11 +50,11 @@ const HomeMain: React.FC = () => {
         textVariant="h6"
         buttonSx={{
           border: 2,
-          borderColor: "#301C1C",
+          borderColor: '#301C1C',
         }}
         labelSx={{
-          color: "#FCFCFC",
-          ...getTextOutline("#301C1C", 1),
+          color: '#FCFCFC',
+          ...getTextOutline('#301C1C', 1),
         }}
       />
       <StartButton />
@@ -66,16 +66,16 @@ const HomeMain: React.FC = () => {
         right={10}
         fontSize={24}
         containerSx={{
-          bgcolor: "#FCFCFC",
+          bgcolor: '#FCFCFC',
           px: 1.5,
           py: 0.5,
           borderRadius: 8,
           border: 2,
-          borderColor: "#301C1C",
+          borderColor: '#301C1C',
         }}
       />
     </BackgroundContainer>
-  );
-};
+  )
+}
 
-export default HomeMain;
+export default HomeMain
