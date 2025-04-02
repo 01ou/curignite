@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore'
 import {
-  TimeTypes,
+  TimeType,
   ISODate,
   ISODateTime,
   TimeSizeUnit,
@@ -36,7 +36,7 @@ const parseISODateTime = (isoDateTime: ISODateTime): Date | null => {
  * @returns 有効なDateオブジェクト
  * @throws 無効な入力の場合はエラーをスローします
  */
-export const convertToDate = (time: TimeTypes): Date => {
+export const convertToDate = (time: TimeType): Date => {
   if (typeof time === 'number' || time instanceof Date) return new Date(time)
   if (time instanceof Timestamp) return time.toDate()
 
@@ -55,21 +55,21 @@ export const convertToDate = (time: TimeTypes): Date => {
   throw new Error(`Unsupported time type: ${typeof time}`)
 }
 
-export const convertToLocalTimeMs = (dateTime: TimeTypes): number => {
+export const convertToLocalTimeMs = (dateTime: TimeType): number => {
   const date = convertToDate(dateTime)
   return date.getTime() - date.getTimezoneOffset() * MINUTES_IN_MILLISECOND
 }
 
-export const getLocalDate = (baseDate: TimeTypes = new Date()) => {
+export const getLocalDate = (baseDate: TimeType = new Date()) => {
   return new Date(convertToLocalTimeMs(baseDate))
 }
 
 /**
- * TimeTypes の入力をミリ秒に変換します。
+ * TimeType の入力をミリ秒に変換します。
  * @param time - 数値、Date、Timestamp、またはISO形式の文字列
  * @returns ミリ秒
  */
-export const convertToMilliseconds = (time: TimeTypes): number => {
+export const convertToMilliseconds = (time: TimeType): number => {
   return convertToDate(time).getTime()
 }
 
@@ -78,7 +78,7 @@ export const convertToMilliseconds = (time: TimeTypes): number => {
  * @param dateTime - 数値、Date、Timestamp、またはISO形式の文字列
  * @returns ISO形式の日付文字列
  */
-export const toISODate = (dateTime: TimeTypes): ISODate => {
+export const toISODate = (dateTime: TimeType): ISODate => {
   const isoString = convertToDate(dateTime).toISOString()
   return isoString.slice(0, 10) as ISODate
 }
@@ -88,16 +88,16 @@ export const toISODate = (dateTime: TimeTypes): ISODate => {
  * @param dateTime - 数値、Date、Timestamp、またはISO形式の文字列
  * @returns ISO形式の日時文字列
  */
-export const toISODateTime = (dateTime: TimeTypes): ISODateTime => {
+export const toISODateTime = (dateTime: TimeType): ISODateTime => {
   return convertToDate(dateTime).toISOString() as ISODateTime
 }
 
 /**
- * TimeTypes の入力を Timestamp オブジェクトに変換します。
+ * TimeType の入力を Timestamp オブジェクトに変換します。
  * @param input - 数値、Timestamp、またはDate
  * @returns 対応する Timestamp オブジェクト
  */
-export const toTimestamp = (input: TimeTypes): Timestamp => {
+export const toTimestamp = (input: TimeType): Timestamp => {
   return Timestamp.fromDate(convertToDate(input))
 }
 

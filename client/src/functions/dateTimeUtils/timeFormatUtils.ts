@@ -1,5 +1,5 @@
 import { differenceInDays } from 'date-fns'
-import { TimeTypes, TimeSizeUnit } from '../../types/utils/dateTimeTypes'
+import { TimeType, TimeSizeUnit } from '../../types/utils/dateTimeTypes'
 import { getMidnightDate } from './dateTimeUtils'
 import { MINUTES_IN_MILLISECOND } from '../../constants/dateTimeConstants'
 import { DurationFormatOptions } from './types/dateTimeOptions'
@@ -129,11 +129,11 @@ export const formatAbbreviatedDuration = (
  * @returns フォーマットされた日付差文字列
  */
 export const formatDayDifference = (
-  targetDate: TimeTypes,
+  targetDate: TimeType,
   options?: Partial<{
     futureFormat: string
     pastFormat: string
-    baseDate: TimeTypes
+    baseDate: TimeType
   }>
 ): string => {
   const futureFormat = options?.futureFormat ?? 'd日後'
@@ -149,7 +149,7 @@ export const formatDayDifference = (
 }
 
 export const shiftDateTime = (
-  base: TimeTypes,
+  base: TimeType,
   shift: number,
   unit: TimeSizeUnit
 ): number => {

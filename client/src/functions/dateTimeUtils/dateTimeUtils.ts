@@ -1,24 +1,24 @@
 import { format, startOfDay, isSameMinute, isBefore } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
-import { TimeTypes, Days } from '../../types/utils/dateTimeTypes'
+import { TimeType, Days } from '../../types/utils/dateTimeTypes'
 import { convertToDate, convertToMilliseconds } from './timeConversion'
 import { DAYS_IN_MILLISECOND } from '../../constants/dateTimeConstants'
 
-export const isMidnight = (dateTime: TimeTypes) => {
+export const isMidnight = (dateTime: TimeType) => {
   const date = convertToDate(dateTime)
   const midnight = new Date(date)
   midnight.setHours(0, 0, 0, 0)
   return isSameMinute(date, midnight)
 }
 
-export const isMatchDay = (date: TimeTypes, targetDay: Days | Days[]) => {
+export const isMatchDay = (date: TimeType, targetDay: Days | Days[]) => {
   const formatDate = format(convertToDate(date), 'dd') as Days
   return typeof targetDay === 'string'
     ? formatDate === targetDay
     : targetDay.includes(formatDate)
 }
 
-export const isEqualDate = (...days: TimeTypes[]): boolean => {
+export const isEqualDate = (...days: TimeType[]): boolean => {
   const check = convertToMilliseconds(startOfDay(convertToDate(days[0])))
   const isDiff = days.some(
     (day) => check !== convertToMilliseconds(startOfDay(convertToDate(day)))
@@ -34,8 +34,8 @@ export const isEqualDate = (...days: TimeTypes[]): boolean => {
  * @returns 比較結果（ターゲット日付が基準日付よりも過去の場合はtrue、そうでない場合はfalse）
  */
 export const isBeforeDateTime = (
-  baseDateTime: TimeTypes,
-  dateTimeToCompare: TimeTypes = new Date(),
+  baseDateTime: TimeType,
+  dateTimeToCompare: TimeType = new Date(),
   includesEqual: boolean = false,
   convertToMidnight = false
 ) => {
@@ -55,12 +55,12 @@ export const isBeforeDateTime = (
  * @returns 0時0分のタイムスタンプ
  */
 export const getMidnightTimestamp = (
-  date: TimeTypes = new Date()
+  date: TimeType = new Date()
 ): Timestamp => {
   return Timestamp.fromDate(getMidnightDate(date))
 }
 
-export const getMidnightDate = (date: TimeTypes = new Date()): Date => {
+export const getMidnightDate = (date: TimeType = new Date()): Date => {
   const midnight = startOfDay(convertToDate(date))
   return midnight
 }
@@ -71,7 +71,7 @@ export const getMidnightDate = (date: TimeTypes = new Date()): Date => {
  * @param hour - The hour to set (0-24).
  * @returns A new Date object with the updated hour.
  */
-export const setHourToDate = (dateTime: TimeTypes, hour: number): Date => {
+export const setHourToDate = (dateTime: TimeType, hour: number): Date => {
   if (hour < 0 || hour > 24) {
     throw new RangeError('Hour must be between 0 and 24.')
   }
@@ -92,8 +92,8 @@ export const setHourToDate = (dateTime: TimeTypes, hour: number): Date => {
  * @returns Number of days between date1 and date2.
  */
 export const getDateDifference = (
-  date1: TimeTypes,
-  date2: TimeTypes,
+  date1: TimeType,
+  date2: TimeType,
   updateHour: number = 0
 ): number => {
   // Convert inputs to Date objects
@@ -114,7 +114,7 @@ export const getDateDifference = (
 }
 
 export const getDayOffsetFromBase = (
-  targetDate: TimeTypes,
+  targetDate: TimeType,
   baseHour: number = 4
 ): number => {
   // 今日の日付を基準日として取得
