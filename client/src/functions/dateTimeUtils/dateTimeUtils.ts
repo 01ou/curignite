@@ -2,6 +2,7 @@ import { format, startOfDay, isSameMinute, isBefore } from 'date-fns'
 import { Timestamp } from 'firebase/firestore'
 import { TimeTypes, Days } from '../../types/utils/dateTimeTypes'
 import { convertToDate, convertToMilliseconds } from './timeConversion'
+import { DAYS_IN_MILLISECOND } from '../../constants/dateTimeConstants'
 
 export const isMidnight = (dateTime: TimeTypes) => {
   const date = convertToDate(dateTime)
@@ -110,4 +111,22 @@ export const getDateDifference = (
   // Calculate difference in milliseconds and convert to days
   const diffTime = d2.getTime() - d1.getTime()
   return Math.round(diffTime / (1000 * 60 * 60 * 24))
+}
+
+export const getDayOffsetFromBase = (
+  targetDate: TimeTypes,
+  baseHour: number = 4
+): number => {
+  // 今日の日付を基準日として取得
+  const now = new Date()
+
+  const baseDate =
+    now.setHours(baseHour, 0, 0, 0) -
+    (now.getHours() >= baseHour ? DAYS_IN_MILLISECOND : 0)
+
+  // ターゲット日も基準時間を考慮した上で差分を計算
+  const diffMs = convertToMilliseconds(targetDate) - baseDate
+
+  // 差分日数を計算し、小数点以下は切り捨て
+  return Math.floor(diffMs / DAYS_IN_MILLISECOND)
 }

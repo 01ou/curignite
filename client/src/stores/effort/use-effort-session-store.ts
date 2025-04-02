@@ -1,28 +1,28 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { EffortData } from '../../pages/voiceBuddy/features/types/effortTypes'
+import { EffortSessionData } from '../../pages/voiceBuddy/features/types/effortTypes'
 
-interface EffortState {
-  currentEffort: EffortData | null
-  effortHistory: EffortData[]
-  handleStartEffort: (startTimestampMs?: number) => void
-  handleFinishCurrentEffort: (endTimestampMs?: number) => void
-  getCurrentEffort: () => EffortData | null
+interface EffortSessionState {
+  currentEffort: EffortSessionData | null
+  effortHistory: EffortSessionData[]
+  onStartEffort: (startTimestampMs?: number) => void
+  onFinishCurrentEffort: (endTimestampMs?: number) => void
+  getCurrentEffort: () => EffortSessionData | null
   isProgressEffort: () => boolean
 }
 
-export const useEffortStore = create<EffortState>()(
+export const useEffortSessionStore = create<EffortSessionState>()(
   persist(
     (set, get) => ({
       currentEffort: null,
       effortHistory: [],
 
-      handleStartEffort: (startTimestampMs = Date.now()) => {
-        get().handleFinishCurrentEffort()
+      onStartEffort: (startTimestampMs = Date.now()) => {
+        get().onFinishCurrentEffort()
         set({ currentEffort: { startTimestampMs } })
       },
 
-      handleFinishCurrentEffort: (endTimestampMs = Date.now()) => {
+      onFinishCurrentEffort: (endTimestampMs = Date.now()) => {
         const effort = get().currentEffort
         if (effort && !effort.endTimestampMs) {
           set((state) => ({
@@ -42,6 +42,6 @@ export const useEffortStore = create<EffortState>()(
         return effort !== null && !effort.endTimestampMs
       },
     }),
-    { name: 'effort-store' }
+    { name: 'effort-session-store' }
   )
 )

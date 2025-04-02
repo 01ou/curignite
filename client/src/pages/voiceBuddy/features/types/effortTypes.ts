@@ -1,4 +1,4 @@
-export interface EffortData {
-  startTimestampMs: number;
-  endTimestampMs?: number;
+export interface EffortSessionData {
+  startTimestampMs: number
+  endTimestampMs?: number
 }

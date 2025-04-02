@@ -2,10 +2,6 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { Chat } from '../../pages/voiceBuddy/features/types/chatTypes'
 
-enum STORAGE_KEYS {
-  HISTORY = 'chatHistory',
-}
-
 type ChatState = {
   chats: Chat[]
   chatId: number
@@ -34,7 +30,7 @@ const useChatStore = create<ChatState>()(
 
       getChats: () => get().chats,
     }),
-    { name: STORAGE_KEYS.HISTORY }
+    { name: 'chat-store' }
   )
 )
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from 'react'
+import { useCallback } from 'react'
 import { Message } from '../types/chatTypes'
 import { getMessageForSituation } from '../functions/characterMessageUtils'
 import { blobToBase64 } from '../../../../functions/audioUtils/blobConversion'
@@ -7,19 +7,10 @@ import useChatStore from '../../../../stores/chat/use-chat-store'
 
 interface UseMessageManagerArgs {
   intimacy: Intimacy
-  accessState: 'firstLogin' | 'firstTimes' | 'multipleTimes' | null
-  consecutiveDays: number
-  markAsMultipleTimes: () => void
 }
 
-const useChatManager = ({
-  intimacy,
-  accessState,
-  consecutiveDays,
-  markAsMultipleTimes,
-}: UseMessageManagerArgs) => {
-  const [update, setUpdate] = useState(0)
-  const { addChat, getChats } = useChatStore()
+const useChatManager = ({ intimacy }: UseMessageManagerArgs) => {
+  const { addChat } = useChatStore()
 
   const handleSendMessage = useCallback(
     (message: Message, senderId: string | 'self' = 'self') => {
@@ -39,7 +30,6 @@ const useChatManager = ({
         message,
         status: 'sent',
       })
-      setUpdate((prev) => prev + 1)
     },
     [addChat]
   )
@@ -53,7 +43,6 @@ const useChatManager = ({
         voiceBase64: await blobToBase64(voiceBlob),
         status: 'sent',
       })
-      setUpdate((prev) => prev + 1)
     },
     [addChat]
   )
@@ -68,18 +57,6 @@ const useChatManager = ({
     [handleSendText]
   )
 
-  useEffect(() => {
-    console.log(accessState)
-    if (accessState === 'firstLogin') {
-      handleSendPartnerMessage('firstLogin')
-    } else if (accessState === 'firstTimes') {
-      sendFirstAccessMessages(consecutiveDays)
-    }
-    if (accessState && accessState !== 'multipleTimes') {
-      markAsMultipleTimes()
-    }
-  }, [accessState, handleSendPartnerMessage])
-
   const sendFirstAccessMessages = useCallback(
     (consecutiveDays: number) => {
       handleSendPartnerMessage('loggingIn')
@@ -90,10 +67,8 @@ const useChatManager = ({
     [intimacy, handleSendText]
   )
 
-  const chats = useMemo(() => getChats(), [update, getChats])
-
   return {
-    chats,
+    sendFirstAccessMessages,
     handleSendMessage,
     handleSendText,
     handleSendVoice,

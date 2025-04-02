@@ -2,7 +2,7 @@ import { Stack, Typography } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
 import { format } from 'date-fns'
 import MessageBubble from '../../components/MessageBubble'
-import { setHourToDate } from '../../../../functions/dateTimeUtils/dateTimeUtils'
+import { getDayOffsetFromBase } from '../../../../functions/dateTimeUtils/dateTimeUtils'
 import useChatManager from '../../features/hooks/useChatManager'
 import { Situation } from '../../features/types/characterTypes'
 import ActionsInChatData from '../../features/json/mvpActionsInChat.json'
@@ -16,8 +16,10 @@ import TypingIndicator from '../../components/TypingIndicator'
 import AnimatedPageTransition from '../../components/AnimatedPageTransition'
 import Countdown from '../../components/Countdown'
 import { useAccessStore } from '../../../../stores/user/use-access-store'
-import { useEffortStore } from '../../../../stores/user/use-effort-store'
 import { useSituationStore } from '../../../../stores/user/use-situation-store'
+import { useEffortSessionStore } from '../../../../stores/effort/use-effort-session-store'
+import { useEffortStore } from '../../../../stores/effort/use-effort-store'
+import useChatStore from '../../../../stores/chat/use-chat-store'
 
 interface ChatMainProps {}
 
@@ -32,32 +34,56 @@ const ChatMain: React.FC<ChatMainProps> = ({}) => {
   const { callbackStatus, callDelayCallbacks } = useDelayCallback()
 
   const { accessState, consecutiveDays, markAsMultipleTimes } = useAccessStore()
-  const { isProgressEffort, handleStartEffort } = useEffortStore()
+  const { countUp } = useEffortStore()
+  const { isProgressEffort, onStartEffort } = useEffortSessionStore()
   const { situationState, setSituationState } = useSituationStore()
+  const { chats } = useChatStore()
 
-  const {} = useAccessStore()
-  const { chats, handleSendText, handleSendPartnerMessage } = useChatManager({
-    intimacy: 3,
-    accessState,
-    consecutiveDays,
-    markAsMultipleTimes,
-  })
+  const { handleSendText, handleSendPartnerMessage, sendFirstAccessMessages } =
+    useChatManager({
+      intimacy: 3,
+    })
 
   const [countDown, setCountDown] = useState<number | null>(null)
   const [effortStartTime, setEffortStartTime] = useState<Date | null>(null)
 
   useEffect(() => {
-    if (isProgressEffort()) {
-      // TODO 強制的にナビゲーションするのではなく、ポップアップを表示する。
-      setEffortStartTime(new Date())
-    }
+    // if (isProgressEffort()) {
+    //   // TODO 強制的にナビゲーションするのではなく、ポップアップを表示する。
+    //   setEffortStartTime(new Date())
+    // }
   }, [])
 
+  useEffect(() => {
+    if (
+      accessState &&
+      (accessState === 'firstLogin' || accessState === 'firstTimes')
+    ) {
+      if (accessState === 'firstLogin') {
+        handleSendPartnerMessage('firstLogin')
+      } else {
+        sendFirstAccessMessages(consecutiveDays)
+      }
+      countUp()
+      markAsMultipleTimes()
+    }
+  }, [
+    accessState,
+    handleSendPartnerMessage,
+    sendFirstAccessMessages,
+    countUp,
+    markAsMultipleTimes,
+  ])
+
   const todayChats = useMemo(() => {
-    // 今日のAM5時以降のチャットを表示する。
-    const todayStart = setHourToDate(new Date(), 5).getTime()
-    return chats.filter((chat) => chat.sentAt >= todayStart)
+    // 今日のAM4時以降のチャットを表示する。
+    return chats.filter((chat) => getDayOffsetFromBase(chat.sentAt, 4) === 0)
   }, [chats])
+
+  const handleStartEffort = () => {
+    onStartEffort()
+    setEffortStartTime(new Date())
+  }
 
   const onSelectAction = (action: ActionChoices) => {
     handleSendText(action.text)
@@ -77,10 +103,7 @@ const ChatMain: React.FC<ChatMainProps> = ({}) => {
             },
             {
               id: 'toWorkOnEffortsPage',
-              callback: () => {
-                setEffortStartTime(new Date())
-                handleStartEffort()
-              },
+              callback: () => handleStartEffort(),
               min: 3000,
             },
           ],
