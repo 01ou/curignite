@@ -1,31 +1,32 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import NotFound from './pages/error/NotFound';
-import AuthRoot from './pages/auth/AuthRoot';
-import HomeRoot from './pages/home/HomeRoot';
-import ProblemSetsRoot from './pages/problemSets/ProblemSetsRoot';
-import useInitializationApp from './features/hooks/app/useInitializationApp';
-import LearningRoot from './pages/learning/LearningRoot';
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import NotFound from './pages/error/NotFound'
+import AuthRoot from './pages/auth/AuthRoot'
+import HomeRoot from './pages/home/HomeRoot'
+import ProblemSetsRoot from './pages/problemSets/ProblemSetsRoot'
+import useInitializationApp from './features/hooks/app/useInitializationApp'
+import LearningRoot from './pages/learning/LearningRoot'
 
-import TimeForgeHomeRoot from './pages/timeForge/home/HomeRoot';
+import TimeForgeHomeRoot from './pages/timeForge/home/HomeRoot'
 
-import UnitHomeRoot from './pages/unit/home/HomeRoot';
+import UnitHomeRoot from './pages/unit/home/HomeRoot'
 
-import "@fontsource/roboto-mono"; // 通常のフォント
-import "@fontsource/press-start-2p"; // 8bit風
-import "@fontsource/vt323"; // レトロPC風
-import '@fontsource/dotgothic16';
-import LongPressComponent from './pages/idea1/top/TopMain';
-import HomeMain from './pages/idea1/home/HomeMain';
-import LearningMain from './pages/idea1/learning/LearningMain';
-import ActionRoot from './pages/timeForge/action/ActionRoot';
-import SpeedRoot from './pages/game/speed/SpeedRoot';
-import ActionPage from './pages/unit/lifeRecord/ActionPage';
-import VoiceBuddyRoot from './pages/voiceBuddy/home/VoiceBuddyRoot';
+import '@fontsource/roboto-mono' // 通常のフォント
+import '@fontsource/press-start-2p' // 8bit風
+import '@fontsource/vt323' // レトロPC風
+import '@fontsource/dotgothic16'
+import LongPressComponent from './pages/idea1/top/TopMain'
+import HomeMain from './pages/idea1/home/HomeMain'
+import LearningMain from './pages/idea1/learning/LearningMain'
+import ActionRoot from './pages/timeForge/action/ActionRoot'
+import SpeedRoot from './pages/game/speed/SpeedRoot'
+import ActionPage from './pages/unit/lifeRecord/ActionPage'
+import VoiceBuddyRoot from './pages/voiceBuddy/pages/home/VoiceBuddyRoot'
+import EffortMain from './pages/voiceBuddy/pages/effort/EffortMain'
 
 const App: React.FC = () => {
-  useInitializationApp();
-  
+  useInitializationApp()
+
   return (
     <Routes>
       <Route path="*" element={<NotFound />} />
@@ -33,23 +34,24 @@ const App: React.FC = () => {
       <Route path="/idea1/home" element={<HomeMain />} />
       <Route path="/idea1/learning" element={<LearningMain />} />
 
-      <Route path='/time-forge/*' element={<TimeForgeHomeRoot />} />
-      <Route path='/time-forge/action' element={<ActionRoot />} />
+      <Route path="/time-forge/*" element={<TimeForgeHomeRoot />} />
+      <Route path="/time-forge/action" element={<ActionRoot />} />
 
-      <Route path='/unit/*' element={<UnitHomeRoot />} />
-      <Route path='/unit/action' element={<ActionPage />} />
+      <Route path="/unit/*" element={<UnitHomeRoot />} />
+      <Route path="/unit/action" element={<ActionPage />} />
 
-      <Route path='/game/speed' element={<SpeedRoot />} />
+      <Route path="/game/speed" element={<SpeedRoot />} />
 
-      <Route path='/voice-buddy/*' element={<VoiceBuddyRoot />} />
+      <Route path="/voice-buddy/*" element={<VoiceBuddyRoot />} />
+      <Route path="voice-buddy/effort" element={<EffortMain />} />
 
-      <Route path='auth' element={<AuthRoot />} />
-      <Route path='auth/:step' element={<AuthRoot />} />
-      <Route path='home' element={<HomeRoot />} />
-      <Route path='learning' element={<LearningRoot />} /> 
-      <Route path='problemSets' element={<ProblemSetsRoot />} />
+      <Route path="auth" element={<AuthRoot />} />
+      <Route path="auth/:step" element={<AuthRoot />} />
+      <Route path="home" element={<HomeRoot />} />
+      <Route path="learning" element={<LearningRoot />} />
+      <Route path="problemSets" element={<ProblemSetsRoot />} />
     </Routes>
-  );
-};
+  )
+}
 
-export default App;
+export default App

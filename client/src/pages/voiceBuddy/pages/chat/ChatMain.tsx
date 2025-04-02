@@ -1,18 +1,23 @@
 import { Stack, Typography } from '@mui/material'
 import React, { useEffect, useMemo, useState } from 'react'
 import { format } from 'date-fns'
-import MessageBubble from '../components/MessageBubble'
-import { setHourToDate } from '../../../functions/dateTimeUtils/dateTimeUtils'
-import useChatManager from '../features/hooks/useChatManager'
-import useUserStorage from '../features/hooks/useUserStorage'
-import { Situation } from '../features/types/characterTypes'
-import ActionsInChatData from '../features/json/mvpActionsInChat.json'
-import { ActionChoices, ActionType } from '../features/types/actionInChatTypes'
+import MessageBubble from '../../components/MessageBubble'
+import { setHourToDate } from '../../../../functions/dateTimeUtils/dateTimeUtils'
+import useChatManager from '../../features/hooks/useChatManager'
+import { Situation } from '../../features/types/characterTypes'
+import ActionsInChatData from '../../features/json/mvpActionsInChat.json'
+import {
+  ActionChoices,
+  ActionType,
+} from '../../features/types/actionInChatTypes'
 import ActionSelections from './ActionSelections'
-import useDelayCallback from '../features/hooks/useDelayCallback'
-import TypingIndicator from '../components/TypingIndicator'
-import AnimatedPageTransition from '../components/AnimatedPageTransition'
-import Countdown from '../components/Countdown'
+import useDelayCallback from '../../features/hooks/useDelayCallback'
+import TypingIndicator from '../../components/TypingIndicator'
+import AnimatedPageTransition from '../../components/AnimatedPageTransition'
+import Countdown from '../../components/Countdown'
+import { useAccessStore } from '../../../../stores/user/use-access-store'
+import { useEffortStore } from '../../../../stores/user/use-effort-store'
+import { useSituationStore } from '../../../../stores/user/use-situation-store'
 
 interface ChatMainProps {}
 
@@ -25,20 +30,19 @@ const getSelectAction = (situation: Situation): ActionChoices[] => {
 
 const ChatMain: React.FC<ChatMainProps> = ({}) => {
   const { callbackStatus, callDelayCallbacks } = useDelayCallback()
-  const {
-    onAccess,
-    setSituationState,
-    getSituationState,
-    handleStartEffort,
-    isProgressEffort,
-  } = useUserStorage()
+
+  const { accessState, consecutiveDays, markAsMultipleTimes } = useAccessStore()
+  const { isProgressEffort, handleStartEffort } = useEffortStore()
+  const { situationState, setSituationState } = useSituationStore()
+
+  const {} = useAccessStore()
   const { chats, handleSendText, handleSendPartnerMessage } = useChatManager({
     intimacy: 3,
-    onAccess,
+    accessState,
+    consecutiveDays,
+    markAsMultipleTimes,
   })
 
-  const [currentSituation, setCurrentSituation] =
-    useState<Situation>(getSituationState())
   const [countDown, setCountDown] = useState<number | null>(null)
   const [effortStartTime, setEffortStartTime] = useState<Date | null>(null)
 
@@ -59,7 +63,7 @@ const ChatMain: React.FC<ChatMainProps> = ({}) => {
     handleSendText(action.text)
     switch (action.id) {
       case 'startingEffort':
-        setCurrentSituation('startingEffort')
+        setSituationState('startingEffort')
         setSituationState('startingEffort')
         callDelayCallbacks({
           tasks: [
@@ -114,13 +118,13 @@ const ChatMain: React.FC<ChatMainProps> = ({}) => {
           </Stack>
         )}
         <ActionSelections
-          actions={getSelectAction(currentSituation)}
+          actions={getSelectAction(situationState)}
           onClickAction={(action) => onSelectAction(action)}
         />
       </Stack>
       <AnimatedPageTransition
         startTime={effortStartTime}
-        path="/voice-buddy/next"
+        path="/voice-buddy/effort"
       />
     </>
   )

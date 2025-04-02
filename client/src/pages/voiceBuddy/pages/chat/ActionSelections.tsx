@@ -1,7 +1,7 @@
 import React from 'react'
 import { Card, Stack, SxProps, Typography } from '@mui/material'
 import ActionSelectionButton from './ActionSelectionButton'
-import { ActionChoices } from '../features/types/actionInChatTypes'
+import { ActionChoices } from '../../features/types/actionInChatTypes'
 
 interface ActionSelectionsProps {
   actions: ActionChoices[]
