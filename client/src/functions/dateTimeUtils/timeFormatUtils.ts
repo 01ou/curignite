@@ -156,3 +156,18 @@ export const shiftDateTime = (
   const ms = convertToMilliseconds(base) + getMsPerUnit(unit) * shift
   return ms
 }
+
+export const formatTime = (ms: number, separator = ':'): string => {
+  const totalSeconds = Math.floor(ms / 1000)
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  if (hours > 0) {
+    return `${hours}${separator}${minutes.toString().padStart(2, '0')}${separator}${seconds.toString().padStart(2, '0')}`
+  } else if (minutes > 0) {
+    return `${minutes}${separator}${seconds.toString().padStart(2, '0')}`
+  } else {
+    return `${seconds}`
+  }
+}

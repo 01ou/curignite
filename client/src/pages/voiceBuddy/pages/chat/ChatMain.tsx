@@ -1,5 +1,5 @@
 import { Stack, Typography } from '@mui/material'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { format } from 'date-fns'
 import MessageBubble from '../../components/MessageBubble'
 import { getDayOffsetFromBase } from '../../../../functions/dateTimeUtils/dateTimeUtils'
@@ -13,13 +13,14 @@ import {
 import ActionSelections from './ActionSelections'
 import useDelayCallback from '../../features/hooks/useDelayCallback'
 import TypingIndicator from '../../components/TypingIndicator'
-import AnimatedPageTransition from '../../components/AnimatedPageTransition'
-import Countdown from '../../components/Countdown'
 import { useAccessStore } from '../../../../stores/user/use-access-store'
 import { useSituationStore } from '../../../../stores/user/use-situation-store'
 import { useEffortSessionStore } from '../../../../stores/effort/use-effort-session-store'
 import { useEffortStore } from '../../../../stores/effort/use-effort-store'
 import useChatStore from '../../../../stores/chat/use-chat-store'
+import { purple } from '@mui/material/colors'
+import RippleButton from './RippleButton'
+import { useNavigate } from 'react-router-dom'
 
 interface ChatMainProps {}
 
@@ -31,6 +32,7 @@ const getSelectAction = (situation: Situation): ActionChoices[] => {
 }
 
 const ChatMain: React.FC<ChatMainProps> = ({}) => {
+  const navigate = useNavigate()
   const { callbackStatus, callDelayCallbacks } = useDelayCallback()
 
   const { accessState, consecutiveDays, markAsMultipleTimes } = useAccessStore()
@@ -43,16 +45,6 @@ const ChatMain: React.FC<ChatMainProps> = ({}) => {
     useChatManager({
       intimacy: 3,
     })
-
-  const [countDown, setCountDown] = useState<number | null>(null)
-  const [effortStartTime, setEffortStartTime] = useState<Date | null>(null)
-
-  useEffect(() => {
-    // if (isProgressEffort()) {
-    //   // TODO 強制的にナビゲーションするのではなく、ポップアップを表示する。
-    //   setEffortStartTime(new Date())
-    // }
-  }, [])
 
   useEffect(() => {
     if (
@@ -80,11 +72,6 @@ const ChatMain: React.FC<ChatMainProps> = ({}) => {
     return chats.filter((chat) => getDayOffsetFromBase(chat.sentAt, 4) === 0)
   }, [chats])
 
-  const handleStartEffort = () => {
-    onStartEffort()
-    setEffortStartTime(new Date())
-  }
-
   const onSelectAction = (action: ActionChoices) => {
     handleSendText(action.text)
     switch (action.id) {
@@ -95,16 +82,10 @@ const ChatMain: React.FC<ChatMainProps> = ({}) => {
           tasks: [
             {
               id: 'typing',
-              callback: () => handleSendPartnerMessage('startingEffort'),
-            },
-            {
-              callback: () => setCountDown(3),
-              min: 1000,
-            },
-            {
-              id: 'toWorkOnEffortsPage',
-              callback: () => handleStartEffort(),
-              min: 3000,
+              callback: () => {
+                handleSendPartnerMessage('startingEffort')
+                onStartEffort()
+              },
             },
           ],
           min: 1000,
@@ -134,21 +115,31 @@ const ChatMain: React.FC<ChatMainProps> = ({}) => {
         {callbackStatus['typing'] && callbackStatus['typing'] === 'waiting' && (
           <TypingIndicator username="恋人" sx={{ mr: 'auto' }} />
         )}
-        {countDown !== null && (
-          <Stack>
-            <Typography>勉強開始まで</Typography>
-            <Countdown start={countDown} />
-          </Stack>
+        {isProgressEffort && (
+          <RippleButton
+            variant="contained"
+            sx={{
+              width: '80%',
+              height: '7vh',
+              fontSize: '1.1rem',
+              bgcolor: purple[300],
+              margin: 5,
+            }}
+            rippleDuration={1000}
+            rippleColor={purple[100]}
+            opacity={{ start: 1, end: 1 }}
+            onFinishCallback={() => navigate('/voice-buddy/effort')}
+          >
+            学習空間へ移動
+          </RippleButton>
         )}
-        <ActionSelections
-          actions={getSelectAction(situationState)}
-          onClickAction={(action) => onSelectAction(action)}
-        />
+        {!isProgressEffort && (
+          <ActionSelections
+            actions={getSelectAction(situationState)}
+            onClickAction={(action) => onSelectAction(action)}
+          />
+        )}
       </Stack>
-      <AnimatedPageTransition
-        startTime={effortStartTime}
-        path="/voice-buddy/effort"
-      />
     </>
   )
 }

@@ -119,10 +119,8 @@ export const getDayOffsetFromBase = (
 ): number => {
   // 今日の日付を基準日として取得
   const now = new Date()
-
-  const baseDate =
-    now.setHours(baseHour, 0, 0, 0) -
-    (now.getHours() >= baseHour ? DAYS_IN_MILLISECOND : 0)
+  const adjustMs = now.getHours() >= baseHour ? 0 : DAYS_IN_MILLISECOND
+  const baseDate = now.setHours(baseHour, 0, 0, 0) - adjustMs
 
   // ターゲット日も基準時間を考慮した上で差分を計算
   const diffMs = convertToMilliseconds(targetDate) - baseDate

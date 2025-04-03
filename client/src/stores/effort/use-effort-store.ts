@@ -1,17 +1,19 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-interface EffortState {
+export interface EffortState {
   continuousEffortLevel: number
   continuousEffortCount: number
   continuousLevelUpCount: number
+  sessionEffortTimeMs: number
   todayEffortTimeMs: number
   totalEffortTimeMs: number
   addEffortTime: (timeMs: number) => void
+  resetSessionEffortTime: () => void
   resetTodayEffortTime: () => void
   incrementLevel: () => void
   incrementEffortCount: (step?: number) => void
-  getLevelUpEffortCountBorder: () => number
+  getLevelUpEffortCountBorder: (level?: number) => number
   countUp: () => void
   levelUp: () => void
   onContinuityBroken: (reduceEffortCount?: number) => void
@@ -23,15 +25,18 @@ export const useEffortStore = create<EffortState>()(
       continuousEffortLevel: 1,
       continuousEffortCount: 0,
       continuousLevelUpCount: 0,
+      sessionEffortTimeMs: 0,
       todayEffortTimeMs: 0,
       totalEffortTimeMs: 0,
 
       addEffortTime: (timeMs) =>
         set((state) => ({
+          sessionEffortTimeMs: state.sessionEffortTimeMs + timeMs,
           todayEffortTimeMs: state.todayEffortTimeMs + timeMs,
           totalEffortTimeMs: state.totalEffortTimeMs + timeMs,
         })),
 
+      resetSessionEffortTime: () => set({ sessionEffortTimeMs: 0 }),
       resetTodayEffortTime: () => set({ todayEffortTimeMs: 0 }),
 
       incrementLevel: () =>

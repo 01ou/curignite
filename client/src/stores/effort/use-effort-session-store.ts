@@ -5,10 +5,10 @@ import { EffortSessionData } from '../../pages/voiceBuddy/features/types/effortT
 interface EffortSessionState {
   currentEffort: EffortSessionData | null
   effortHistory: EffortSessionData[]
+  isProgressEffort: boolean
   onStartEffort: (startTimestampMs?: number) => void
   onFinishCurrentEffort: (endTimestampMs?: number) => void
   getCurrentEffort: () => EffortSessionData | null
-  isProgressEffort: () => boolean
 }
 
 export const useEffortSessionStore = create<EffortSessionState>()(
@@ -16,10 +16,11 @@ export const useEffortSessionStore = create<EffortSessionState>()(
     (set, get) => ({
       currentEffort: null,
       effortHistory: [],
+      isProgressEffort: false,
 
       onStartEffort: (startTimestampMs = Date.now()) => {
         get().onFinishCurrentEffort()
-        set({ currentEffort: { startTimestampMs } })
+        set({ isProgressEffort: true, currentEffort: { startTimestampMs } })
       },
 
       onFinishCurrentEffort: (endTimestampMs = Date.now()) => {
@@ -31,16 +32,12 @@ export const useEffortSessionStore = create<EffortSessionState>()(
               ...state.effortHistory,
               { ...effort, endTimestampMs },
             ],
+            isProgressEffort: false,
           }))
         }
       },
 
       getCurrentEffort: () => get().currentEffort,
-
-      isProgressEffort: () => {
-        const effort = get().currentEffort
-        return effort !== null && !effort.endTimestampMs
-      },
     }),
     { name: 'effort-session-store' }
   )
